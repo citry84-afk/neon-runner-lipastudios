@@ -44,30 +44,20 @@
 
 # PWA Support
 [[headers]]
-  for = "/neon-runner.html"
+  for = "/index.html"
   [headers.values]
     Cache-Control = "public, max-age=3600"
     X-Content-Type-Options = "nosniff"
 
-# Social Media Automation Webhook
-# Configure this URL in your Zapier/automation platform
-[[plugins]]
-  package = "@netlify/plugin-functions"
-
-[plugins.inputs]
-  node_bundler = "esbuild"
+# Plugins removed for simple deployment - can be added later
 
 # SPA routing for PWA
 [[redirects]]
   from = "/*"
-  to = "/neon-runner.html"
+  to = "/index.html"
   status = 200
 
-# API redirects for social automation
-[[redirects]]
-  from = "/api/social-webhook"
-  to = "/.netlify/functions/social-webhook"
-  status = 200
+# API redirects removed for simple deployment
 
 # Gzip compression
 [[headers]]
