@@ -20,6 +20,13 @@
     <meta name="twitter:description" content="How far can you run in the neon highway? Challenge yourself in this addictive cyberpunk endless runner!">
     <meta name="twitter:image" content="https://neon-runner-lipastudios.netlify.app/og-image.png">
     
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FF0080">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Neon Runner">
+    
     <!-- Google Analytics 4 - Revenue Tracking -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-633RQLC6T0"></script>
     <script>
@@ -1636,32 +1643,7 @@
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
             window.addEventListener('load', () => {
-                const swContent = `
-                    const CACHE_NAME = 'neon-runner-v1.0.0';
-                    const urlsToCache = [
-                        '/',
-                        '/neon-runner.html'
-                    ];
-                    
-                    self.addEventListener('install', event => {
-                        event.waitUntil(
-                            caches.open(CACHE_NAME)
-                                .then(cache => cache.addAll(urlsToCache))
-                        );
-                    });
-                    
-                    self.addEventListener('fetch', event => {
-                        event.respondWith(
-                            caches.match(event.request)
-                                .then(response => response || fetch(event.request))
-                        );
-                    });
-                `;
-                
-                const blob = new Blob([swContent], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                
-                navigator.serviceWorker.register(swUrl)
+                navigator.serviceWorker.register('/sw.js')
                     .then(registration => {
                         console.log('🚀 SW registered:', registration.scope);
                     })

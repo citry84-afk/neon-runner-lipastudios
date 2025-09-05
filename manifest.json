@@ -1,0 +1,73 @@
+{
+  "name": "Neon Runner - Cyberpunk Endless Runner",
+  "short_name": "Neon Runner",
+  "description": "🚀 Ultra-addictive endless cyberpunk runner by LIPA Studios. Sprint through neon highways, collect coins, dodge obstacles and become the ultimate neon runner!",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#FF0080",
+  "background_color": "#050505",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjMDUwNTA1Ii8+CjxyZWN0IHg9IjIwIiB5PSI2MCIgd2lkdGg9IjE1MiIgaGVpZ2h0PSI3MiIgZmlsbD0idXJsKCNncmFkaWVudDApIiBzdHJva2U9IiNGRjAwODAiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNODAgOTZMMTEyIDgwVjExMkw4MCA5NloiIGZpbGw9IiMwMEZGRkYiLz4KPHN0eWxlPgpAa2V5ZnJhbWVzIG5lb25HbG93IHsKMCUsIDEwMCUgeyBmaWx0ZXI6IGRyb3Atc2hhZG93KDAgMCA1cHggIzAwRkZGRik7IH0KNTA+IHsgZmlsdGVyOiBkcm9wLXNoYWRvdygwIDAgMTVweCAjMDBGRkZGKTsgfQp9CnBhdGggeyBhbmltYXRpb246IG5lb25HbG93IDJzIGVhc2UtaW4tb3V0IGluZmluaXRlOyB9Cjwvc3R5bGU+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgo8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkYwMDgwIi8+CjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjRkY0NTAwIi8+CjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwRkZGRiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPg==",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjMDUwNTA1Ii8+CjxyZWN0IHg9IjY0IiB5PSIxNjAiIHdpZHRoPSIzODQiIGhlaWdodD0iMTkyIiBmaWxsPSJ1cmwoI2dyYWRpZW50MCkiIHN0cm9rZT0iI0ZGMDA4MCIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxwYXRoIGQ9Ik0yMTYgMjU2TDI5NiAyMTZWMjk2TDIxNiAyNTZaIiBmaWxsPSIjMDBGRkZGIi8+CjxzdHlsZT4KQGV5ZnJhbWVzIG5lb25HbG93IHsKMCUsIDEwMCUgeyBmaWx0ZXI6IGRyb3Atc2hhZG93KDAgMCA4cHggIzAwRkZGRik7IH0KNTA+IHsgZmlsdGVyOiBkcm9wLXNoYWRvdygwIDAgMjRweCAjMDBGRkZGKTsgfQp9CnBhdGggeyBhbmltYXRpb246IG5lb25HbG93IDJzIGVhc2UtaW4tb3V0IGluZmluaXRlOyB9Cjwvc3R5bGU+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgo8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkYwMDgwIi8+CjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjRkY0NTAwIi8+CjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwRkZGRiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "entertainment", "action"],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTA4MCIgaGVpZ2h0PSIxOTIwIiB2aWV3Qm94PSIwIDAgMTA4MCA1NDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDgwIiBoZWlnaHQ9IjU0MCIgZmlsbD0idXJsKCNnYW1lQmcpIi8+Cjx0ZXh0IHg9IjU0MCIgeT0iMjcwIiBmaWxsPSIjRkYwMDgwIiBmb250LXNpemU9IjcyIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5qAIE5FT04gUlVOTkVSIPCfkIA8L3RleHQ+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdhbWVCZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgo8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDUwNTA1Ii8+CjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMGEwYTBhIi8+CjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMGExYSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPg==",
+      "sizes": "1080x540",
+      "type": "image/svg+xml",
+      "label": "Neon Runner Gameplay"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Jugar Ahora",
+      "short_name": "Jugar",
+      "description": "Empezar nueva partida de Neon Runner",
+      "url": "/?action=play",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTM2IDI0TDcyIDQ4TDM2IDcyVjI0WiIgZmlsbD0iIzAwRkZGRiIvPgo8L3N2Zz4=",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Leaderboard",
+      "short_name": "Records",
+      "description": "Ver mejores puntuaciones",
+      "url": "/?action=leaderboard",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQ4IDhMMTYgMzJWODBIODBWMzJMNDggOFoiIGZpbGw9IiNGRjAwODAiLz4KPHN0YXIgY3g9IjQ4IiBjeT0iNDgiIHI9IjEyIiBmaWxsPSIjRkZGRjAwIi8+Cjwvc3ZnPg==",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "web",
+      "url": "https://stack-tower-neon2.netlify.app/",
+      "id": "stack-tower-neon"
+    }
+  ],
+  "scope": "/",
+  "id": "neon-runner-lipastudios",
+  "lang": "es-ES",
+  "dir": "ltr"
+}
