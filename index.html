@@ -994,6 +994,17 @@
             showScreen('game');
             clearGameCanvas();
             
+            // ENSURE runner is visible
+            const runnerElement = document.getElementById('runner');
+            if (runnerElement) {
+                runnerElement.style.display = 'block';
+                runnerElement.style.visibility = 'visible';
+                runnerElement.style.opacity = '1';
+                runnerElement.style.left = '100px';
+                runnerElement.style.bottom = '150px';
+                console.log('🏃 Runner should be visible now');
+            }
+            
             if (audioContext) {
                 audioContext.resume();
                 setTimeout(() => {
@@ -1631,31 +1642,54 @@
             }
         });
         
-        // Initialize
-        setTimeout(() => {
-            initAudio();
+        // Initialize - FORCED VISIBILITY for production
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 DOM loaded, initializing...');
             
-            // Force show menu screen immediately
-            document.getElementById('loading-screen').classList.add('hidden');
-            document.getElementById('menu-screen').classList.remove('hidden');
-            currentScreen = 'menu';
-            
-            // Update best distance
-            document.getElementById('best-distance').textContent = gameState.bestDistance + 'm';
-            
-            window.trackEvent('game_loaded', {
-                load_time: Date.now() - window.sessionStart,
-                returning_user: localStorage.getItem('neonRunnerReturning') === 'true',
-                device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
-            });
-            
-            // Mark as returning user
-            localStorage.setItem('neonRunnerReturning', 'true');
-            
-            // Initialize social media automation
-            SocialMediaBot.onGameDeploy();
-            
-        }, 2000);
+            // FORCE immediate visibility - no waiting
+            setTimeout(() => {
+                initAudio();
+                
+                // FORCE show menu - multiple methods to ensure it works
+                const loadingScreen = document.getElementById('loading-screen');
+                const menuScreen = document.getElementById('menu-screen');
+                
+                if (loadingScreen) {
+                    loadingScreen.style.display = 'none';
+                    loadingScreen.classList.add('hidden');
+                }
+                
+                if (menuScreen) {
+                    menuScreen.style.display = 'flex';
+                    menuScreen.classList.remove('hidden');
+                }
+                
+                currentScreen = 'menu';
+                
+                // Update best distance
+                const bestDistanceEl = document.getElementById('best-distance');
+                if (bestDistanceEl) {
+                    bestDistanceEl.textContent = gameState.bestDistance + 'm';
+                }
+                
+                console.log('🎮 Menu should be visible now');
+                
+                window.trackEvent('game_loaded', {
+                    load_time: Date.now() - window.sessionStart,
+                    returning_user: localStorage.getItem('neonRunnerReturning') === 'true',
+                    device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
+                });
+                
+                // Mark as returning user
+                localStorage.setItem('neonRunnerReturning', 'true');
+                
+                // Initialize social media automation
+                if (typeof SocialMediaBot !== 'undefined') {
+                    SocialMediaBot.onGameDeploy();
+                }
+                
+            }, 1000);
+        });
         
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
