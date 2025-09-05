@@ -1,0 +1,57 @@
+# robots.txt for Neon Runner - LIPA Studios
+# Optimized for search engine discovery and monetization
+
+User-agent: *
+Allow: /
+
+# Prioritize main game page
+Allow: /neon-runner.html
+Allow: /index.html
+
+# Allow Google AdSense crawlers
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+# Allow analytics and social media crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# SEO optimization
+Sitemap: https://neon-runner-lipastudios.netlify.app/sitemap.xml
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Block resource-heavy requests
+Disallow: /api/
+Disallow: /.netlify/
+Disallow: /admin/
+Disallow: /private/
+
+# Cache policy hints for crawlers
+# Allow caching of static assets
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.ico
+
+# Game monetization optimization
+# Allow ad-related files to be crawled
+Allow: /ads.txt
+Allow: /manifest.json
+Allow: /sw.js

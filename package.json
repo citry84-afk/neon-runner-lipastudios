@@ -1,0 +1,75 @@
+{
+  "name": "neon-runner-lipastudios",
+  "version": "1.0.0",
+  "description": "Endless cyberpunk runner game with ultra-monetization and social media automation",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 8000",
+    "start": "python3 -m http.server 8000",
+    "build": "echo 'No build step required - static HTML5 game'",
+    "deploy": "netlify deploy --prod",
+    "test": "echo 'Testing game locally...' && open index.html"
+  },
+  "keywords": [
+    "html5-game",
+    "endless-runner",
+    "cyberpunk",
+    "neon",
+    "monetization",
+    "pwa",
+    "mobile-game",
+    "javascript-game",
+    "adsense",
+    "viral-game"
+  ],
+  "author": "LIPA Studios",
+  "license": "MIT",
+  "homepage": "https://neon-runner-lipastudios.netlify.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/[your-username]/neon-runner-lipastudios.git"
+  },
+  "bugs": {
+    "url": "https://github.com/[your-username]/neon-runner-lipastudios/issues"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "pwa": {
+    "name": "Neon Runner",
+    "short_name": "NeonRunner",
+    "description": "Endless cyberpunk runner game",
+    "display": "standalone",
+    "orientation": "portrait",
+    "theme_color": "#FF0080",
+    "background_color": "#050505"
+  },
+  "monetization": {
+    "adsense": {
+      "publisher": "ca-pub-4129506161314540",
+      "slots": {
+        "top_banner": "1234567890",
+        "bottom_banner": "0987654321",
+        "floating_ad": "1122334455",
+        "game_over": "5544332211",
+        "rewarded_video": "9988776655"
+      }
+    },
+    "analytics": {
+      "google_analytics": "G-633RQLC6T0"
+    }
+  },
+  "social_automation": {
+    "platforms": ["instagram", "tiktok", "youtube", "twitter"],
+    "webhook": "https://hooks.zapier.com/hooks/catch/[your-webhook]"
+  }
+}

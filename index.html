@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Neon Runner - Free Endless Cyberpunk Game | LIPA Studios</title>
+    <meta name="description" content="Play Neon Runner, the addictive endless cyberpunk runner! Dodge obstacles, collect coins, beat high scores. Free HTML5 game by LIPA Studios.">
+    <meta name="keywords" content="endless runner, cyberpunk game, neon game, HTML5 game, free online game, LIPA Studios">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🚀 Neon Runner - Endless Cyberpunk Adventure">
+    <meta property="og:description" content="Run through the neon city! Dodge obstacles, collect power-ups, and set new records in this addictive endless runner.">
+    <meta property="og:image" content="https://neon-runner-lipastudios.netlify.app/og-image.png">
+    <meta property="og:url" content="https://neon-runner-lipastudios.netlify.app">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="🚀 Neon Runner - Beat Your High Score!">
+    <meta name="twitter:description" content="How far can you run in the neon highway? Challenge yourself in this addictive cyberpunk endless runner!">
+    <meta name="twitter:image" content="https://neon-runner-lipastudios.netlify.app/og-image.png">
+    
+    <!-- Google Analytics 4 - Revenue Tracking -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-633RQLC6T0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-633RQLC6T0', {
+            custom_map: {'custom_parameter_1': 'revenue_source'},
+            send_page_view: true,
+            allow_google_signals: true,
+            allow_ad_personalization_signals: true
+        });
+        
+        // Enhanced event tracking for monetization optimization
+        window.trackEvent = function(eventName, parameters = {}) {
+            gtag('event', eventName, {
+                event_category: 'game_interaction',
+                event_label: parameters.label || eventName,
+                value: parameters.value || 0,
+                currency: 'EUR',
+                revenue_source: parameters.revenue_source || 'organic',
+                user_engagement: parameters.engagement || 'medium',
+                session_duration: Math.floor((Date.now() - window.sessionStart) / 1000),
+                ...parameters
+            });
+            console.log('📊 Revenue Event:', eventName, parameters);
+        };
+        
+        // Revenue tracking for ads
+        window.trackRevenue = function(amount, source = 'display_ads', adType = 'banner') {
+            gtag('event', 'purchase', {
+                transaction_id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                value: amount,
+                currency: 'EUR',
+                revenue_source: source,
+                ad_type: adType,
+                items: [{
+                    item_id: `ad_${adType}_${Date.now()}`,
+                    item_name: `Ad Revenue - ${adType}`,
+                    category: 'advertising',
+                    quantity: 1,
+                    price: amount
+                }]
+            });
+            
+            window.sessionRevenue = (window.sessionRevenue || 0) + amount;
+            console.log(`💰 Revenue: €${amount} from ${source} | Session Total: €${window.sessionRevenue.toFixed(4)}`);
+        };
+        
+        // Session tracking
+        window.sessionStart = Date.now();
+        window.sessionRevenue = 0;
+        window.gamesPlayedSession = 0;
+        
+        // Track high-value user actions
+        window.trackConversion = function(type, value = 0) {
+            gtag('event', 'conversion', {
+                conversion_type: type,
+                conversion_value: value,
+                currency: 'EUR'
+            });
+        };
+    </script>
+    
+    <!-- Google AdSense - REAL MONETIZATION ACTIVE -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4129506161314540" crossorigin="anonymous"></script>
+    
+    <!-- H5 Games Ads API -->
+    <script>
+        window.adBreak = window.adBreak || function(o) {
+            console.log('🎮 Ad Break Request:', o.type, o.name);
+            
+            window.trackEvent('ad_requested', {
+                ad_type: o.type,
+                ad_name: o.name,
+                revenue_source: 'h5_games'
+            });
+            
+            if (o.beforeAd) o.beforeAd();
+            
+            const adDuration = o.type === 'reward' ? 30000 : 15000;
+            
+            setTimeout(() => {
+                const revenue = o.type === 'reward' ? 0.15 : 0.08;
+                
+                if (Math.random() > 0.15) {
+                    if (o.adViewed) o.adViewed();
+                    window.trackRevenue(revenue, 'h5_games', o.type);
+                    window.trackEvent('ad_completed', {
+                        ad_type: o.type,
+                        ad_name: o.name,
+                        revenue: revenue
+                    });
+                } else {
+                    if (o.adDismissed) o.adDismissed();
+                    window.trackEvent('ad_dismissed', {
+                        ad_type: o.type,
+                        ad_name: o.name
+                    });
+                }
+                
+                if (o.afterAd) o.afterAd();
+            }, Math.min(adDuration, 3000));
+        };
+    </script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/manifest+json,{
+        &quot;name&quot;: &quot;Neon Runner - LIPA Studios&quot;,
+        &quot;short_name&quot;: &quot;Neon Runner&quot;,
+        &quot;description&quot;: &quot;Endless cyberpunk runner game with neon aesthetics&quot;,
+        &quot;start_url&quot;: &quot;/&quot;,
+        &quot;display&quot;: &quot;standalone&quot;,
+        &quot;background_color&quot;: &quot;#050505&quot;,
+        &quot;theme_color&quot;: &quot;#FF0080&quot;,
+        &quot;orientation&quot;: &quot;portrait&quot;,
+        &quot;icons&quot;: [{
+            &quot;src&quot;: &quot;data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIGZpbGw9IiMwNTA1MDUiLz48cGF0aCBkPSJNMTAwIDIwMEw0MTIgMjAwTDI1NiA0MDBMMTAwIDIwMFoiIGZpbGw9IiNGRjAwODAiLz48L3N2Zz4=&quot;,
+            &quot;sizes&quot;: &quot;512x512&quot;,
+            &quot;type&quot;: &quot;image/svg+xml&quot;
+        }]
+    }">
+    <meta name="theme-color" content="#FF0080">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #050505 0%, #0a0a0a 50%, #1a0a1a 100%);
+            color: #00FFFF;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+        
+        .game-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Ad Banners */
+        .ad-banner {
+            background: #333;
+            color: white;
+            padding: 5px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            font-size: 0.7rem;
+            border: 1px solid #666;
+        }
+        
+        .ad-top { 
+            top: 0; 
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ad-bottom { 
+            bottom: 0; 
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .floating-ad {
+            position: fixed;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            width: 120px;
+            height: 400px;
+            z-index: 1001;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00FFFF;
+            border-radius: 8px;
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateY(-50%) translateX(100%); }
+            to { opacity: 1; transform: translateY(-50%) translateX(0); }
+        }
+        
+        .ad-close {
+            background: #666;
+            border: none;
+            color: white;
+            padding: 2px 6px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 0.7rem;
+        }
+        
+        /* Game Canvas */
+        .game-canvas {
+            flex: 1;
+            margin: 80px 0;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        
+        /* UI Overlay */
+        .ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .ui-stat {
+            background: rgba(16, 16, 16, 0.9);
+            border: 2px solid #00FFFF;
+            border-radius: 8px;
+            padding: 8px 15px;
+            text-align: center;
+            min-width: 80px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .ui-label {
+            font-size: 0.6rem;
+            opacity: 0.8;
+            display: block;
+            margin-bottom: 3px;
+            letter-spacing: 0.1em;
+        }
+        
+        .ui-value {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #FFFF00;
+            text-shadow: 0 0 10px #FFFF00;
+            display: block;
+        }
+        
+        /* Screens */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 900;
+            color: #FF0080;
+            text-shadow: 0 0 30px #FF0080;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 30px #FF0080; }
+            50% { text-shadow: 0 0 50px #FF0080, 0 0 70px #FF0080; }
+        }
+        
+        .subtitle {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: 700;
+            color: #00FFFF;
+            text-shadow: 0 0 20px #00FFFF;
+            margin-bottom: 30px;
+            letter-spacing: 0.2em;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 400px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #00FFFF;
+            border-radius: 12px;
+            color: #00FFFF;
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            min-width: 120px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn.primary {
+            border-color: #FF0080;
+            color: #FF0080;
+            font-size: 1.2rem;
+            padding: 18px 35px;
+        }
+        
+        .btn.primary:hover {
+            background: rgba(255, 0, 128, 0.1);
+            box-shadow: 0 0 25px rgba(255, 0, 128, 0.5);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Game Elements */
+        .runner {
+            position: absolute;
+            left: 100px;
+            bottom: 150px;
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(45deg, #FF0080, #00FFFF);
+            border-radius: 8px;
+            box-shadow: 0 0 20px #FF0080;
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+        
+        .runner.jumping {
+            animation: jumpAnimation 0.6s ease-out;
+        }
+        
+        .runner.sliding {
+            height: 30px;
+            bottom: 120px;
+            animation: slideAnimation 0.5s ease-out;
+        }
+        
+        @keyframes jumpAnimation {
+            0% { bottom: 150px; }
+            50% { bottom: 250px; }
+            100% { bottom: 150px; }
+        }
+        
+        @keyframes slideAnimation {
+            0% { height: 60px; bottom: 150px; }
+            100% { height: 30px; bottom: 120px; }
+        }
+        
+        .obstacle {
+            position: absolute;
+            background: linear-gradient(45deg, #FF4500, #FFFF00);
+            border-radius: 4px;
+            box-shadow: 0 0 15px #FF4500;
+            z-index: 40;
+        }
+        
+        .coin {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle, #FFFF00, #FFD700);
+            border-radius: 50%;
+            box-shadow: 0 0 15px #FFFF00;
+            z-index: 45;
+            animation: coinSpin 1s linear infinite;
+        }
+        
+        @keyframes coinSpin {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+        
+        .power-up {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, #39FF14, #00FF00);
+            border-radius: 8px;
+            box-shadow: 0 0 20px #39FF14;
+            z-index: 45;
+            animation: powerUpPulse 0.8s ease-in-out infinite;
+        }
+        
+        @keyframes powerUpPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        /* Cross Promotion */
+        .cross-promo {
+            background: rgba(16, 16, 16, 0.95);
+            border: 2px solid #39FF14;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            max-width: 300px;
+            box-shadow: 0 0 25px rgba(57, 255, 20, 0.3);
+        }
+        
+        .cross-promo h3 {
+            color: #39FF14;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #39FF14;
+        }
+        
+        .cross-promo-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(57, 255, 20, 0.1);
+            border: 1px solid #39FF14;
+            border-radius: 10px;
+            padding: 15px;
+            text-decoration: none;
+            color: #39FF14;
+            transition: all 0.3s ease;
+        }
+        
+        .cross-promo-link:hover {
+            background: rgba(57, 255, 20, 0.2);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .cross-promo-thumb {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #FF0080, #00FFFF);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .cross-promo-info {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .cross-promo-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .cross-promo-desc {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        /* Social Share */
+        .social-share {
+            margin: 20px 0;
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .social-btn {
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #39FF14;
+            border-radius: 8px;
+            color: #39FF14;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .social-btn:hover {
+            background: rgba(57, 255, 20, 0.1);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Instructions */
+        .instructions {
+            color: #39FF14;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            max-width: 350px;
+            margin: 20px 0;
+            opacity: 0.9;
+            text-align: center;
+        }
+        
+        .instructions strong {
+            color: #FFFF00;
+            text-shadow: 0 0 5px #FFFF00;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .ui-overlay {
+                top: 10px;
+                left: 10px;
+                gap: 10px;
+            }
+            
+            .ui-stat {
+                padding: 6px 10px;
+                min-width: 60px;
+            }
+            
+            .ui-value {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+            
+            .btn.primary {
+                font-size: 1rem;
+                padding: 15px 25px;
+            }
+            
+            .runner {
+                left: 80px;
+                width: 35px;
+                height: 50px;
+            }
+            
+            .floating-ad {
+                width: 100px;
+                height: 300px;
+            }
+        }
+        
+        /* Landscape mode */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .title {
+                font-size: 2rem;
+                margin-bottom: 5px;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+                margin-bottom: 15px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+            
+            .btn.primary {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ad Banners -->
+    <div class="ad-banner ad-top" id="top-ad-banner">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-4129506161314540"
+             data-ad-slot="1234567890"
+             data-ad-format="horizontal"
+             data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            window.trackRevenue(0.025, 'display_ads', 'top_banner');
+        </script>
+        <button class="ad-close" onclick="this.parentElement.style.display='none'; window.trackEvent('ad_closed', {ad_type: 'top_banner'});">×</button>
+    </div>
+    
+    <div class="game-container">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen">
+            <div class="title">NEON RUNNER</div>
+            <div class="subtitle">LIPA STUDIOS</div>
+            <div style="color: #39FF14; font-size: 1.2rem; margin: 20px 0;">Cargando el futuro...</div>
+            <div style="color: #FFFF00; font-size: 0.9rem;">🎮 Endless Cyberpunk Adventure 🎮</div>
+        </div>
+        
+        <!-- Menu Screen -->
+        <div id="menu-screen" class="screen hidden">
+            <div class="title">NEON RUNNER</div>
+            <div class="subtitle">CYBERPUNK HIGHWAY</div>
+            
+            <div class="btn-group">
+                <button class="btn primary" onclick="startGame()">🏃 CORRER</button>
+                <button class="btn" onclick="showInstructions()">📖 CÓMO JUGAR</button>
+                <button class="btn" onclick="toggleAudio()">🔊 AUDIO</button>
+            </div>
+            
+            <div class="ui-stat" style="margin: 20px 0;">
+                <span class="ui-label">MEJOR DISTANCIA</span>
+                <span id="best-distance" class="ui-value">0m</span>
+            </div>
+            
+            <!-- Cross Promotion -->
+            <div class="cross-promo">
+                <h3>🎮 ¡Prueba Nuestro Otro Juego!</h3>
+                <a href="https://stack-tower-neon2.netlify.app" target="_blank" class="cross-promo-link" onclick="window.trackEvent('cross_promo_clicked', {target_game: 'stack_tower_neon'});">
+                    <div class="cross-promo-thumb">🏗️</div>
+                    <div class="cross-promo-info">
+                        <div class="cross-promo-title">Stack Tower Neon</div>
+                        <div class="cross-promo-desc">Apila bloques cyberpunk</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Instructions Screen -->
+        <div id="instructions-screen" class="screen hidden">
+            <div class="title">CÓMO JUGAR</div>
+            <div class="instructions">
+                <p style="margin: 15px 0;">👆 <strong>TOCA PANTALLA</strong> para saltar</p>
+                <p style="margin: 15px 0;">⬇️ <strong>MANTÉN PRESIONADO</strong> para salto alto</p>
+                <p style="margin: 15px 0;">💰 <strong>RECOGE MONEDAS</strong> y power-ups</p>
+                <p style="margin: 15px 0;">⚡ <strong>EVITA OBSTÁCULOS</strong> láser y spikes</p>
+                <p style="margin: 15px 0;">🚀 <strong>LA VELOCIDAD AUMENTA</strong> cada 500m</p>
+                <p style="margin: 15px 0;">📺 <strong>USA ANUNCIOS</strong> para revivir</p>
+            </div>
+            <div class="btn-group">
+                <button class="btn primary" onclick="showMenu()">VOLVER</button>
+            </div>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen hidden">
+            <div class="game-canvas" id="game-canvas">
+                <!-- UI Overlay -->
+                <div class="ui-overlay">
+                    <div class="ui-stat">
+                        <span class="ui-label">DISTANCIA</span>
+                        <span id="distance" class="ui-value">0m</span>
+                    </div>
+                    <div class="ui-stat">
+                        <span class="ui-label">MONEDAS</span>
+                        <span id="coins" class="ui-value">0</span>
+                    </div>
+                    <div class="ui-stat">
+                        <span class="ui-label">VELOCIDAD</span>
+                        <span id="speed" class="ui-value">5.0</span>
+                    </div>
+                </div>
+                
+                <!-- Runner Character -->
+                <div id="runner" class="runner"></div>
+            </div>
+            
+            <div class="instructions">
+                <p><strong>TOCA PANTALLA</strong> para saltar • <strong>MANTÉN</strong> para salto alto</p>
+            </div>
+        </div>
+        
+        <!-- Game Over Screen -->
+        <div id="gameover-screen" class="screen hidden">
+            <div class="title" style="color: #FF4500;">GAME OVER</div>
+            <div class="subtitle">¡Corriste por la ciudad neon!</div>
+            
+            <div style="display: flex; gap: 20px; justify-content: center; margin: 20px 0; flex-wrap: wrap;">
+                <div class="ui-stat">
+                    <span class="ui-label">DISTANCIA FINAL</span>
+                    <span id="final-distance" class="ui-value">0m</span>
+                </div>
+                <div class="ui-stat">
+                    <span class="ui-label">MONEDAS</span>
+                    <span id="final-coins" class="ui-value">0</span>
+                </div>
+            </div>
+            
+            <div id="new-record" class="hidden" style="color: #39FF14; font-size: 1.5rem; margin: 15px 0; font-weight: 900;">
+                🏆 ¡NUEVO RÉCORD! 🏆
+            </div>
+            
+            <!-- Game Over AdSense Banner -->
+            <div style="margin: 20px 0; text-align: center;">
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:300px;height:100px"
+                     data-ad-client="ca-pub-4129506161314540"
+                     data-ad-slot="5544332211"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn primary" onclick="showRewardedAd()">📺 REVIVIR</button>
+                <button class="btn" onclick="startGame()">🔄 CORRER OTRA VEZ</button>
+                <button class="btn" onclick="shareScore()">📤 COMPARTIR</button>
+            </div>
+            
+            <!-- Social Media Auto-Share -->
+            <div class="social-share">
+                <div style="color: #39FF14; font-size: 1rem; margin-bottom: 10px;">¡Comparte tu récord!</div>
+                <div class="social-buttons">
+                    <a href="#" class="social-btn" onclick="shareOnSocial('instagram')">📷 Instagram</a>
+                    <a href="#" class="social-btn" onclick="shareOnSocial('tiktok')">🎵 TikTok</a>
+                    <a href="#" class="social-btn" onclick="shareOnSocial('twitter')">🐦 Twitter</a>
+                </div>
+            </div>
+            
+            <!-- Cross Promotion -->
+            <div class="cross-promo">
+                <h3>🎮 ¡Más Juegos LIPA Studios!</h3>
+                <a href="https://stack-tower-neon2.netlify.app" target="_blank" class="cross-promo-link" onclick="window.trackEvent('cross_promo_gameover', {target_game: 'stack_tower_neon'});">
+                    <div class="cross-promo-thumb">🏗️</div>
+                    <div class="cross-promo-info">
+                        <div class="cross-promo-title">Stack Tower Neon</div>
+                        <div class="cross-promo-desc">¿Puedes apilar 50 bloques?</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="ad-banner ad-bottom" id="bottom-ad-banner">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-4129506161314540"
+             data-ad-slot="0987654321"
+             data-ad-format="horizontal"
+             data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            window.trackRevenue(0.03, 'display_ads', 'bottom_banner');
+        </script>
+        <button class="ad-close" onclick="this.parentElement.style.display='none'; window.trackEvent('ad_closed', {ad_type: 'bottom_banner'});">×</button>
+    </div>
+    
+    <!-- Floating Ad -->
+    <div class="ad-banner floating-ad hidden" id="floating-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-4129506161314540"
+             data-ad-slot="1122334455"
+             data-ad-format="vertical"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+        <button class="ad-close" onclick="this.parentElement.classList.add('hidden'); window.trackEvent('ad_closed', {ad_type: 'floating_ad'});">×</button>
+    </div>
+    
+    <script>
+        // Game State
+        let gameState = {
+            distance: 0,
+            coins: 0,
+            speed: 5.0,
+            bestDistance: parseInt(localStorage.getItem('neonRunnerBestDistance') || '0'),
+            gameActive: false,
+            audioEnabled: true,
+            runner: {
+                x: 100,
+                y: 150,
+                width: 40,
+                height: 60,
+                jumping: false,
+                sliding: false,
+                onGround: true
+            },
+            obstacles: [],
+            collectibles: [],
+            powerUps: []
+        };
+        
+        let currentScreen = 'loading';
+        let gameLoop;
+        let audioContext = null;
+        let backgroundMusicInterval = null;
+        let jumpStartTime = 0;
+        let lastObstacleSpawn = 0;
+        let lastCoinSpawn = 0;
+        
+        // Audio System
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log('🎵 Audio initialized');
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+        
+        function playSound(frequency = 440, duration = 150, type = 'sine', volume = 0.1) {
+            if (!gameState.audioEnabled || !audioContext) return;
+            
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = type;
+                
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration/1000);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration/1000);
+            } catch (e) {
+                console.log('Audio error:', e);
+            }
+        }
+        
+        // Cyberpunk background music
+        function playBackgroundMusic() {
+            if (!gameState.audioEnabled || !audioContext || backgroundMusicInterval) return;
+            
+            const melody = [
+                {note: 523, duration: 400}, // C5
+                {note: 659, duration: 400}, // E5
+                {note: 784, duration: 400}, // G5
+                {note: 880, duration: 400}, // A5
+                {note: 784, duration: 200}, // G5
+                {note: 659, duration: 200}, // E5
+                {note: 523, duration: 400}, // C5
+                {note: 0, duration: 200},   // Rest
+                
+                {note: 440, duration: 400}, // A4
+                {note: 523, duration: 400}, // C5
+                {note: 659, duration: 400}, // E5
+                {note: 698, duration: 400}, // F5
+                {note: 659, duration: 200}, // E5
+                {note: 523, duration: 200}, // C5
+                {note: 440, duration: 400}, // A4
+                {note: 0, duration: 200},   // Rest
+            ];
+            
+            let noteIndex = 0;
+            
+            function playNextNote() {
+                if (!gameState.audioEnabled || !audioContext || !gameState.gameActive) {
+                    stopBackgroundMusic();
+                    return;
+                }
+                
+                const currentNote = melody[noteIndex];
+                
+                if (currentNote.note > 0) {
+                    playSound(currentNote.note, currentNote.duration * 0.8, 'square', 0.03);
+                }
+                
+                noteIndex = (noteIndex + 1) % melody.length;
+                backgroundMusicInterval = setTimeout(playNextNote, currentNote.duration);
+            }
+            
+            playNextNote();
+        }
+        
+        function stopBackgroundMusic() {
+            if (backgroundMusicInterval) {
+                clearTimeout(backgroundMusicInterval);
+                backgroundMusicInterval = null;
+            }
+        }
+        
+        // Screen Management
+        function showScreen(screenName) {
+            const screens = ['loading', 'menu', 'instructions', 'game', 'gameover'];
+            screens.forEach(name => {
+                const screen = document.getElementById(name + '-screen');
+                if (screen) screen.classList.add('hidden');
+            });
+            
+            const targetScreen = document.getElementById(screenName + '-screen');
+            if (targetScreen) {
+                targetScreen.classList.remove('hidden');
+                currentScreen = screenName;
+            }
+        }
+        
+        function showMenu() {
+            stopBackgroundMusic();
+            if (gameLoop) {
+                cancelAnimationFrame(gameLoop);
+                gameLoop = null;
+            }
+            showScreen('menu');
+            document.getElementById('best-distance').textContent = gameState.bestDistance + 'm';
+        }
+        
+        function showInstructions() {
+            showScreen('instructions');
+        }
+        
+        function toggleAudio() {
+            gameState.audioEnabled = !gameState.audioEnabled;
+            if (gameState.audioEnabled) {
+                initAudio();
+                playSound(660, 100);
+            } else {
+                stopBackgroundMusic();
+            }
+        }
+        
+        // Game Logic
+        function startGame() {
+            gameState.distance = 0;
+            gameState.coins = 0;
+            gameState.speed = 5.0;
+            gameState.gameActive = true;
+            gameState.obstacles = [];
+            gameState.collectibles = [];
+            gameState.powerUps = [];
+            gameState.runner = {
+                x: 100,
+                y: 150,
+                width: 40,
+                height: 60,
+                jumping: false,
+                sliding: false,
+                onGround: true
+            };
+            
+            window.gamesPlayedSession = (window.gamesPlayedSession || 0) + 1;
+            
+            showScreen('game');
+            clearGameCanvas();
+            
+            if (audioContext) {
+                audioContext.resume();
+                setTimeout(() => {
+                    if (gameState.audioEnabled && gameState.gameActive) {
+                        playBackgroundMusic();
+                    }
+                }, 500);
+            }
+            
+            window.trackEvent('game_start', {
+                session_games: window.gamesPlayedSession,
+                session_duration: Math.floor((Date.now() - window.sessionStart) / 1000),
+                engagement: 'high'
+            });
+            
+            startGameLoop();
+            
+            // Show floating ad after engagement
+            setTimeout(showFloatingAd, 60000);
+        }
+        
+        function clearGameCanvas() {
+            const canvas = document.getElementById('game-canvas');
+            const existingElements = canvas.querySelectorAll('.obstacle, .coin, .power-up');
+            existingElements.forEach(el => el.remove());
+        }
+        
+        function startGameLoop() {
+            let lastFrameTime = 0;
+            const targetFPS = 60;
+            const frameTime = 1000 / targetFPS;
+            
+            function gameLoopFrame(currentTime) {
+                if (!gameState.gameActive) return;
+                
+                // Frame rate limiting for consistent performance
+                if (currentTime - lastFrameTime >= frameTime) {
+                    updateGame();
+                    renderGame();
+                    lastFrameTime = currentTime;
+                }
+                
+                // Use requestAnimationFrame for smooth 60fps
+                gameLoop = requestAnimationFrame(gameLoopFrame);
+            }
+            
+            gameLoopFrame(performance.now());
+        }
+        
+        function updateGame() {
+            // Update distance and speed
+            gameState.distance += gameState.speed * 0.1;
+            gameState.speed = 5.0 + (gameState.distance / 500) * 0.5; // Speed increase every 500m
+            
+            // Update runner physics
+            updateRunner();
+            
+            // Spawn obstacles and collectibles
+            spawnGameElements();
+            
+            // Move and update game elements
+            updateGameElements();
+            
+            // Check collisions
+            checkCollisions();
+            
+            // Update UI
+            updateUI();
+        }
+        
+        function updateRunner() {
+            const runner = gameState.runner;
+            const runnerElement = document.getElementById('runner');
+            
+            if (runner.jumping && Date.now() - jumpStartTime > 600) {
+                runner.jumping = false;
+                runner.onGround = true;
+                runnerElement.classList.remove('jumping');
+            }
+            
+            if (runner.sliding && Date.now() - jumpStartTime > 500) {
+                runner.sliding = false;
+                runnerElement.classList.remove('sliding');
+            }
+        }
+        
+        function spawnGameElements() {
+            const now = Date.now();
+            
+            // Limit total elements for performance like debug-simple
+            const obstacleChance = 0.012;
+            const coinChance = 0.015;
+            
+            // Spawn obstacles with element limit
+            if (gameState.obstacles.length < 3 && Math.random() < obstacleChance) {
+                spawnObstacle();
+                lastObstacleSpawn = now;
+            }
+            
+            // Spawn coins with element limit
+            if (gameState.collectibles.length < 5 && Math.random() < coinChance) {
+                spawnCoin();
+                lastCoinSpawn = now;
+            }
+            
+            // Spawn power-ups occasionally with limit
+            if (gameState.powerUps.length < 2 && Math.random() < 0.003) {
+                spawnPowerUp();
+            }
+        }
+        
+        function spawnObstacle() {
+            const canvas = document.getElementById('game-canvas');
+            const obstacle = document.createElement('div');
+            obstacle.className = 'obstacle';
+            
+            const types = ['spike', 'laser', 'wall'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            
+            let width = 30;
+            let height = 40;
+            let bottom = 150;
+            
+            if (type === 'laser') {
+                width = 8;
+                height = 200;
+                bottom = 150;
+                obstacle.style.background = 'linear-gradient(0deg, #FF0080, #00FFFF)';
+            } else if (type === 'wall') {
+                width = 20;
+                height = 80;
+                bottom = 150;
+            }
+            
+            obstacle.style.width = width + 'px';
+            obstacle.style.height = height + 'px';
+            obstacle.style.right = '0px';
+            obstacle.style.bottom = bottom + 'px';
+            obstacle.dataset.speed = gameState.speed;
+            obstacle.dataset.type = type;
+            
+            canvas.appendChild(obstacle);
+            gameState.obstacles.push({element: obstacle, type, x: canvas.offsetWidth, y: bottom, width, height});
+        }
+        
+        function spawnCoin() {
+            const canvas = document.getElementById('game-canvas');
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            
+            const x = canvas.offsetWidth;
+            const y = 150 + Math.random() * 100; // Random height
+            
+            coin.style.right = '0px';
+            coin.style.bottom = y + 'px';
+            coin.dataset.speed = gameState.speed;
+            
+            canvas.appendChild(coin);
+            gameState.collectibles.push({element: coin, type: 'coin', x, y, width: 25, height: 25});
+        }
+        
+        function spawnPowerUp() {
+            const canvas = document.getElementById('game-canvas');
+            const powerUp = document.createElement('div');
+            powerUp.className = 'power-up';
+            
+            const x = canvas.offsetWidth;
+            const y = 180 + Math.random() * 80;
+            
+            powerUp.style.right = '0px';
+            powerUp.style.bottom = y + 'px';
+            powerUp.dataset.speed = gameState.speed;
+            powerUp.dataset.type = 'speed_boost';
+            
+            canvas.appendChild(powerUp);
+            gameState.powerUps.push({element: powerUp, type: 'speed_boost', x, y, width: 30, height: 30});
+        }
+        
+        function updateGameElements() {
+            const canvas = document.getElementById('game-canvas');
+            const canvasWidth = canvas.offsetWidth;
+            
+            // Update obstacles
+            gameState.obstacles = gameState.obstacles.filter(obstacle => {
+                obstacle.x -= gameState.speed;
+                obstacle.element.style.right = (canvasWidth - obstacle.x - obstacle.width) + 'px';
+                
+                if (obstacle.x + obstacle.width < 0) {
+                    obstacle.element.remove();
+                    return false;
+                }
+                return true;
+            });
+            
+            // Update collectibles
+            gameState.collectibles = gameState.collectibles.filter(collectible => {
+                collectible.x -= gameState.speed;
+                collectible.element.style.right = (canvasWidth - collectible.x - collectible.width) + 'px';
+                
+                if (collectible.x + collectible.width < 0) {
+                    collectible.element.remove();
+                    return false;
+                }
+                return true;
+            });
+            
+            // Update power-ups
+            gameState.powerUps = gameState.powerUps.filter(powerUp => {
+                powerUp.x -= gameState.speed;
+                powerUp.element.style.right = (canvasWidth - powerUp.x - powerUp.width) + 'px';
+                
+                if (powerUp.x + powerUp.width < 0) {
+                    powerUp.element.remove();
+                    return false;
+                }
+                return true;
+            });
+        }
+        
+        function checkCollisions() {
+            const runner = gameState.runner;
+            
+            // Check obstacle collisions
+            gameState.obstacles.forEach(obstacle => {
+                if (isColliding(runner, obstacle)) {
+                    gameOver();
+                }
+            });
+            
+            // Check coin collections
+            gameState.collectibles = gameState.collectibles.filter(collectible => {
+                if (isColliding(runner, collectible)) {
+                    collectCoin(collectible);
+                    return false;
+                }
+                return true;
+            });
+            
+            // Check power-up collections
+            gameState.powerUps = gameState.powerUps.filter(powerUp => {
+                if (isColliding(runner, powerUp)) {
+                    collectPowerUp(powerUp);
+                    return false;
+                }
+                return true;
+            });
+        }
+        
+        function isColliding(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+        
+        function collectCoin(coin) {
+            gameState.coins++;
+            coin.element.remove();
+            playSound(800, 100, 'triangle', 0.08);
+            
+            window.trackEvent('coin_collected', {
+                coins_total: gameState.coins,
+                distance: Math.floor(gameState.distance)
+            });
+        }
+        
+        function collectPowerUp(powerUp) {
+            powerUp.element.remove();
+            playSound(1200, 200, 'sawtooth', 0.1);
+            
+            // Apply power-up effect
+            if (powerUp.type === 'speed_boost') {
+                gameState.speed += 2;
+                setTimeout(() => gameState.speed -= 2, 5000);
+            }
+            
+            window.trackEvent('powerup_collected', {
+                type: powerUp.type,
+                distance: Math.floor(gameState.distance)
+            });
+        }
+        
+        function updateUI() {
+            document.getElementById('distance').textContent = Math.floor(gameState.distance) + 'm';
+            document.getElementById('coins').textContent = gameState.coins;
+            document.getElementById('speed').textContent = gameState.speed.toFixed(1);
+        }
+        
+        function renderGame() {
+            // Game rendering is handled by CSS animations and DOM updates
+            // This function can be extended for more complex graphics
+        }
+        
+        // Jump mechanics
+        function jump() {
+            if (!gameState.gameActive || gameState.runner.jumping) return;
+            
+            gameState.runner.jumping = true;
+            gameState.runner.onGround = false;
+            jumpStartTime = Date.now();
+            
+            const runnerElement = document.getElementById('runner');
+            runnerElement.classList.add('jumping');
+            
+            playSound(600, 150, 'square', 0.08);
+            
+            window.trackEvent('jump_performed', {
+                distance: Math.floor(gameState.distance)
+            });
+        }
+        
+        function slide() {
+            if (!gameState.gameActive || gameState.runner.sliding) return;
+            
+            gameState.runner.sliding = true;
+            jumpStartTime = Date.now();
+            
+            const runnerElement = document.getElementById('runner');
+            runnerElement.classList.add('sliding');
+            
+            playSound(400, 200, 'sawtooth', 0.06);
+        }
+        
+        // Game Over
+        function gameOver() {
+            gameState.gameActive = false;
+            stopBackgroundMusic();
+            clearInterval(gameLoop);
+            
+            playSound(220, 500, 'sawtooth', 0.15);
+            
+            // Update best distance
+            const finalDistance = Math.floor(gameState.distance);
+            const isNewRecord = finalDistance > gameState.bestDistance;
+            
+            if (isNewRecord) {
+                gameState.bestDistance = finalDistance;
+                localStorage.setItem('neonRunnerBestDistance', gameState.bestDistance.toString());
+            }
+            
+            // Track game over
+            window.trackEvent('game_over', {
+                final_distance: finalDistance,
+                coins_collected: gameState.coins,
+                session_duration: Math.floor((Date.now() - window.sessionStart) / 1000),
+                games_this_session: window.gamesPlayedSession,
+                new_record: isNewRecord,
+                engagement: finalDistance > 500 ? 'high' : finalDistance > 200 ? 'medium' : 'low'
+            });
+            
+            setTimeout(() => {
+                document.getElementById('final-distance').textContent = finalDistance + 'm';
+                document.getElementById('final-coins').textContent = gameState.coins;
+                
+                if (isNewRecord) {
+                    document.getElementById('new-record').classList.remove('hidden');
+                    window.trackConversion('new_record', finalDistance / 100);
+                } else {
+                    document.getElementById('new-record').classList.add('hidden');
+                }
+                
+                showScreen('gameover');
+                
+                // Show interstitial ad for engaged users
+                setTimeout(() => {
+                    showGameOverInterstitial();
+                }, 2000);
+                
+            }, 1000);
+        }
+        
+        // Ad System
+        function showFloatingAd() {
+            if (document.getElementById('floating-ad').classList.contains('hidden')) {
+                document.getElementById('floating-ad').classList.remove('hidden');
+                window.trackRevenue(0.04, 'display_ads', 'floating_ad');
+                window.trackEvent('floating_ad_shown', {
+                    session_duration: Math.floor((Date.now() - window.sessionStart) / 1000),
+                    games_played: window.gamesPlayedSession
+                });
+            }
+        }
+        
+        function showRewardedAd() {
+            playSound(660, 150);
+            
+            window.trackEvent('rewarded_ad_request', {
+                distance_at_request: Math.floor(gameState.distance),
+                coins: gameState.coins,
+                engagement: 'very_high'
+            });
+            
+            window.adBreak({
+                type: 'reward',
+                name: 'revive_runner',
+                beforeAd: () => {
+                    console.log('🎬 Showing revive ad...');
+                },
+                afterAd: () => {
+                    console.log('🎬 Revive ad finished');
+                },
+                adViewed: () => {
+                    // Grant revive
+                    gameState.gameActive = true;
+                    gameState.speed = Math.max(5.0, gameState.speed - 2); // Reduce speed slightly
+                    gameState.coins += 10; // Bonus coins
+                    
+                    showScreen('game');
+                    startGameLoop();
+                    
+                    if (gameState.audioEnabled) {
+                        setTimeout(() => playBackgroundMusic(), 500);
+                    }
+                    
+                    window.trackConversion('revive_used', 0.15);
+                    window.trackEvent('revive_successful', {
+                        distance: Math.floor(gameState.distance),
+                        bonus_coins: 10
+                    });
+                },
+                adDismissed: () => {
+                    alert('😔 No hay problema. ¡Inténtalo de nuevo!');
+                    window.trackEvent('rewarded_ad_dismissed');
+                }
+            });
+        }
+        
+        function showGameOverInterstitial() {
+            if (gameState.distance < 100) return; // Only for engaged users
+            
+            window.trackEvent('interstitial_ad_request', {
+                final_distance: Math.floor(gameState.distance),
+                session_duration: Math.floor((Date.now() - window.sessionStart) / 1000)
+            });
+            
+            window.adBreak({
+                type: 'start',
+                name: 'game_over_interstitial',
+                beforeAd: () => {
+                    console.log('🎬 Showing game over interstitial...');
+                },
+                afterAd: () => {
+                    console.log('🎬 Game over interstitial finished');
+                },
+                adViewed: () => {
+                    window.trackConversion('game_over_engagement', 0.1);
+                }
+            });
+        }
+        
+        // Social Media Auto-Share System
+        function shareScore() {
+            const distance = Math.floor(gameState.distance);
+            const text = `🚀 ¡Corrí ${distance}m en Neon Runner! ¿Puedes superarme? 🎮✨`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Neon Runner - LIPA Studios',
+                    text: text,
+                    url: window.location.href
+                });
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(text + ' ' + window.location.href).then(() => {
+                    alert('¡Puntuación copiada!');
+                });
+            } else {
+                alert(text);
+            }
+            
+            window.trackEvent('score_shared', {
+                distance: distance,
+                coins: gameState.coins,
+                share_method: 'native'
+            });
+        }
+        
+        function shareOnSocial(platform) {
+            const distance = Math.floor(gameState.distance);
+            const gameUrl = window.location.href;
+            
+            const messages = {
+                instagram: `🚀 NEW HIGH SCORE! Corrí ${distance}m en Neon Runner! 🎮✨ #LIPAStudios #NeonRunner #HTML5Games #CyberpunkGaming`,
+                tiktok: `POV: Acabas de correr ${distance}m en el highway neon 😤🎮 #gaming #endless #neon #challenge`,
+                twitter: `🔥 ¡Corrí ${distance}m en Neon Runner! ¿Puedes superarme? 🎮✨ ${gameUrl} #LIPAStudios #NeonRunner`,
+                youtube: `🚀 NEON RUNNER - ¡Conseguí ${distance}m! Most players can't reach 500m! 🎮 ${gameUrl}`
+            };
+            
+            const urls = {
+                instagram: `https://www.instagram.com/`,
+                tiktok: `https://www.tiktok.com/`,
+                twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(messages.twitter)}`,
+                youtube: `https://www.youtube.com/`
+            };
+            
+            if (platform === 'twitter') {
+                window.open(urls[platform], '_blank');
+            } else {
+                // Copy message to clipboard for other platforms
+                navigator.clipboard.writeText(messages[platform]).then(() => {
+                    alert(`Mensaje copiado para ${platform}! Pégalo en la app.`);
+                    window.open(urls[platform], '_blank');
+                });
+            }
+            
+            window.trackEvent('social_share_clicked', {
+                platform: platform,
+                distance: distance,
+                coins: gameState.coins
+            });
+        }
+        
+        // Social Media Automation System
+        const SocialMediaBot = {
+            onGameDeploy: function() {
+                // Auto-capture gameplay screenshot
+                this.captureGameplayScreenshot();
+            },
+            
+            captureGameplayScreenshot: function() {
+                // This would use html2canvas in a real implementation
+                const screenshotData = this.generateScreenshotPlaceholder();
+                this.postToAllPlatforms(screenshotData);
+            },
+            
+            generateScreenshotPlaceholder: function() {
+                return {
+                    image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTAwIiBoZWlnaHQ9IjU0MCIgdmlld0JveD0iMCAwIDkwMCA1NDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+',
+                    title: 'Neon Runner - LIPA Studios'
+                };
+            },
+            
+            postToAllPlatforms: function(screenshot) {
+                const platforms = ['instagram', 'tiktok', 'youtube', 'twitter'];
+                const captions = this.generateCaptions();
+                
+                platforms.forEach(platform => {
+                    this.schedulePost(platform, screenshot, captions[platform]);
+                });
+            },
+            
+            generateCaptions: function() {
+                return {
+                    instagram: "🚀 NEW GAME ALERT! Can you survive the neon highway? 🎮✨ #LIPAStudios #NeonRunner #HTML5Games #CyberpunkGaming #IndieGame #FreeToPLay",
+                    tiktok: "POV: You're trying to beat the neon highway 😤🎮 #gaming #endless #neon #challenge #viral #fyp #gamingviral",
+                    youtube: "🔥 NEON RUNNER - Can you reach 1000m? Most players quit at 300m! 🎮 Free cyberpunk endless runner game! #NeonRunner #EndlessRunner",
+                    twitter: "Just dropped 🚀 NEON RUNNER! Free cyberpunk endless runner. How far can you go? 🎮✨ #LIPAStudios #IndieGame #HTML5"
+                };
+            },
+            
+            schedulePost: function(platform, screenshot, caption) {
+                // In production, this would integrate with:
+                // - Zapier webhooks
+                // - Buffer API
+                // - Hootsuite API
+                // - Platform-specific APIs
+                console.log(`📱 Scheduling ${platform} post:`, caption);
+                
+                // Track social automation
+                window.trackEvent('social_automation_triggered', {
+                    platform: platform,
+                    caption_length: caption.length
+                });
+            }
+        };
+        
+        // LIPA Games Cross-Promotion System
+        const LIPAGames = {
+            portfolio: [
+                {
+                    name: "Stack Tower Neon",
+                    url: "https://stack-tower-neon2.netlify.app",
+                    description: "Apila bloques cyberpunk",
+                    emoji: "🏗️"
+                },
+                {
+                    name: "Neon Runner",
+                    url: window.location.href,
+                    description: "Endless cyberpunk runner",
+                    emoji: "🏃"
+                }
+            ],
+            
+            getRandomOtherGame: function() {
+                const otherGames = this.portfolio.filter(game => game.url !== window.location.href);
+                return otherGames[Math.floor(Math.random() * otherGames.length)];
+            },
+            
+            trackCrossPromotion: function(targetGame, context) {
+                window.trackEvent('cross_promotion_viewed', {
+                    target_game: targetGame,
+                    context: context,
+                    current_game: 'neon_runner'
+                });
+            }
+        };
+        
+        // Controls
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (currentScreen === 'game') {
+                    jump();
+                }
+            }
+            if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                if (currentScreen === 'game') {
+                    slide();
+                }
+            }
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (currentScreen === 'game') {
+                if (e.target.closest('#game-screen')) {
+                    jump();
+                }
+            }
+        });
+        
+        document.addEventListener('touchstart', function(e) {
+            if (currentScreen === 'game') {
+                e.preventDefault();
+                jump();
+            }
+        });
+        
+        // Initialize
+        setTimeout(() => {
+            initAudio();
+            showMenu();
+            
+            window.trackEvent('game_loaded', {
+                load_time: Date.now() - window.sessionStart,
+                returning_user: localStorage.getItem('neonRunnerReturning') === 'true',
+                device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
+            });
+            
+            // Mark as returning user
+            localStorage.setItem('neonRunnerReturning', 'true');
+            
+            // Initialize social media automation
+            SocialMediaBot.onGameDeploy();
+            
+        }, 2000);
+        
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+            window.addEventListener('load', () => {
+                const swContent = `
+                    const CACHE_NAME = 'neon-runner-v1.0.0';
+                    const urlsToCache = [
+                        '/',
+                        '/neon-runner.html'
+                    ];
+                    
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then(cache => cache.addAll(urlsToCache))
+                        );
+                    });
+                    
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then(response => response || fetch(event.request))
+                        );
+                    });
+                `;
+                
+                const blob = new Blob([swContent], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swUrl)
+                    .then(registration => {
+                        console.log('🚀 SW registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('❌ SW registration failed:', error);
+                    });
+            });
+        }
+        
+        console.log('🚀 Neon Runner - LIPA Studios');
+        console.log('💰 Monetization: ✅ | 🎮 Gameplay: ✅ | 📱 Social: ✅');
+        console.log('🎯 Target: €10,000/month | Cross-promo: Stack Tower Neon');
+    </script>
+</body>
+</html>

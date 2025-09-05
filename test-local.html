@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Neon Runner - Test Local</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #050505 0%, #0a0a0a 50%, #1a0a1a 100%);
+            color: #00FFFF;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+        
+        .game-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Game Canvas */
+        .game-canvas {
+            flex: 1;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        
+        /* UI Overlay */
+        .ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .ui-stat {
+            background: rgba(16, 16, 16, 0.9);
+            border: 2px solid #00FFFF;
+            border-radius: 8px;
+            padding: 8px 15px;
+            text-align: center;
+            min-width: 80px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .ui-label {
+            font-size: 0.6rem;
+            opacity: 0.8;
+            display: block;
+            margin-bottom: 3px;
+            letter-spacing: 0.1em;
+        }
+        
+        .ui-value {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #FFFF00;
+            text-shadow: 0 0 10px #FFFF00;
+            display: block;
+        }
+        
+        /* Screens */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 900;
+            color: #FF0080;
+            text-shadow: 0 0 30px #FF0080;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 30px #FF0080; }
+            50% { text-shadow: 0 0 50px #FF0080, 0 0 70px #FF0080; }
+        }
+        
+        .subtitle {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: 700;
+            color: #00FFFF;
+            text-shadow: 0 0 20px #00FFFF;
+            margin-bottom: 30px;
+            letter-spacing: 0.2em;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 400px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #00FFFF;
+            border-radius: 12px;
+            color: #00FFFF;
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            min-width: 120px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn.primary {
+            border-color: #FF0080;
+            color: #FF0080;
+            font-size: 1.2rem;
+            padding: 18px 35px;
+        }
+        
+        .btn.primary:hover {
+            background: rgba(255, 0, 128, 0.1);
+            box-shadow: 0 0 25px rgba(255, 0, 128, 0.5);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Game Elements */
+        .runner {
+            position: absolute;
+            left: 100px;
+            bottom: 150px;
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(45deg, #FF0080, #00FFFF);
+            border-radius: 8px;
+            box-shadow: 0 0 20px #FF0080;
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+        
+        .runner.jumping {
+            animation: jumpAnimation 0.6s ease-out;
+        }
+        
+        .runner.sliding {
+            height: 30px;
+            bottom: 120px;
+            animation: slideAnimation 0.5s ease-out;
+        }
+        
+        @keyframes jumpAnimation {
+            0% { bottom: 150px; }
+            50% { bottom: 250px; }
+            100% { bottom: 150px; }
+        }
+        
+        @keyframes slideAnimation {
+            0% { height: 60px; bottom: 150px; }
+            100% { height: 30px; bottom: 120px; }
+        }
+        
+        .obstacle {
+            position: absolute;
+            background: linear-gradient(45deg, #FF4500, #FFFF00);
+            border-radius: 4px;
+            box-shadow: 0 0 15px #FF4500;
+            z-index: 40;
+        }
+        
+        .coin {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle, #FFFF00, #FFD700);
+            border-radius: 50%;
+            box-shadow: 0 0 15px #FFFF00;
+            z-index: 45;
+            animation: coinSpin 1s linear infinite;
+        }
+        
+        @keyframes coinSpin {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+        
+        .power-up {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, #39FF14, #00FF00);
+            border-radius: 8px;
+            box-shadow: 0 0 20px #39FF14;
+            z-index: 45;
+            animation: powerUpPulse 0.8s ease-in-out infinite;
+        }
+        
+        @keyframes powerUpPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        /* Instructions */
+        .instructions {
+            color: #39FF14;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            max-width: 350px;
+            margin: 20px 0;
+            opacity: 0.9;
+            text-align: center;
+        }
+        
+        .instructions strong {
+            color: #FFFF00;
+            text-shadow: 0 0 5px #FFFF00;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .ui-overlay {
+                top: 10px;
+                left: 10px;
+                gap: 10px;
+            }
+            
+            .ui-stat {
+                padding: 6px 10px;
+                min-width: 60px;
+            }
+            
+            .ui-value {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+            
+            .btn.primary {
+                font-size: 1rem;
+                padding: 15px 25px;
+            }
+            
+            .runner {
+                left: 80px;
+                width: 35px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen">
+            <div class="title">NEON RUNNER</div>
+            <div class="subtitle">LIPA STUDIOS</div>
+            <div style="color: #39FF14; font-size: 1.2rem; margin: 20px 0;">Cargando el futuro...</div>
+            <div style="color: #FFFF00; font-size: 0.9rem;">🎮 Endless Cyberpunk Adventure 🎮</div>
+        </div>
+        
+        <!-- Menu Screen -->
+        <div id="menu-screen" class="screen hidden">
+            <div class="title">NEON RUNNER</div>
+            <div class="subtitle">CYBERPUNK HIGHWAY</div>
+            
+            <div class="btn-group">
+                <button class="btn primary" onclick="startGame()">🏃 CORRER</button>
+                <button class="btn" onclick="showInstructions()">📖 CÓMO JUGAR</button>
+                <button class="btn" onclick="toggleAudio()">🔊 AUDIO</button>
+            </div>
+            
+            <div class="ui-stat" style="margin: 20px 0;">
+                <span class="ui-label">MEJOR DISTANCIA</span>
+                <span id="best-distance" class="ui-value">0m</span>
+            </div>
+        </div>
+        
+        <!-- Instructions Screen -->
+        <div id="instructions-screen" class="screen hidden">
+            <div class="title">CÓMO JUGAR</div>
+            <div class="instructions">
+                <p style="margin: 15px 0;">👆 <strong>TOCA PANTALLA</strong> para saltar</p>
+                <p style="margin: 15px 0;">⬇️ <strong>MANTÉN PRESIONADO</strong> para salto alto</p>
+                <p style="margin: 15px 0;">💰 <strong>RECOGE MONEDAS</strong> y power-ups</p>
+                <p style="margin: 15px 0;">⚡ <strong>EVITA OBSTÁCULOS</strong> láser y spikes</p>
+                <p style="margin: 15px 0;">🚀 <strong>LA VELOCIDAD AUMENTA</strong> cada 500m</p>
+            </div>
+            <div class="btn-group">
+                <button class="btn primary" onclick="showMenu()">VOLVER</button>
+            </div>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen hidden">
+            <div class="game-canvas" id="game-canvas">
+                <!-- UI Overlay -->
+                <div class="ui-overlay">
+                    <div class="ui-stat">
+                        <span class="ui-label">DISTANCIA</span>
+                        <span id="distance" class="ui-value">0m</span>
+                    </div>
+                    <div class="ui-stat">
+                        <span class="ui-label">MONEDAS</span>
+                        <span id="coins" class="ui-value">0</span>
+                    </div>
+                    <div class="ui-stat">
+                        <span class="ui-label">VELOCIDAD</span>
+                        <span id="speed" class="ui-value">5.0</span>
+                    </div>
+                </div>
+                
+                <!-- Runner Character -->
+                <div id="runner" class="runner"></div>
+            </div>
+            
+            <div class="instructions">
+                <p><strong>TOCA PANTALLA</strong> para saltar • <strong>MANTÉN</strong> para salto alto</p>
+            </div>
+        </div>
+        
+        <!-- Game Over Screen -->
+        <div id="gameover-screen" class="screen hidden">
+            <div class="title" style="color: #FF4500;">GAME OVER</div>
+            <div class="subtitle">¡Corriste por la ciudad neon!</div>
+            
+            <div style="display: flex; gap: 20px; justify-content: center; margin: 20px 0; flex-wrap: wrap;">
+                <div class="ui-stat">
+                    <span class="ui-label">DISTANCIA FINAL</span>
+                    <span id="final-distance" class="ui-value">0m</span>
+                </div>
+                <div class="ui-stat">
+                    <span class="ui-label">MONEDAS</span>
+                    <span id="final-coins" class="ui-value">0</span>
+                </div>
+            </div>
+            
+            <div id="new-record" class="hidden" style="color: #39FF14; font-size: 1.5rem; margin: 15px 0; font-weight: 900;">
+                🏆 ¡NUEVO RÉCORD! 🏆
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn primary" onclick="startGame()">🔄 CORRER OTRA VEZ</button>
+                <button class="btn" onclick="shareScore()">📤 COMPARTIR</button>
+                <button class="btn" onclick="showMenu()">🏠 MENÚ</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Game State
+        let gameState = {
+            distance: 0,
+            coins: 0,
+            speed: 5.0,
+            bestDistance: parseInt(localStorage.getItem('neonRunnerBestDistance') || '0'),
+            gameActive: false,
+            audioEnabled: true,
+            runner: {
+                x: 100,
+                y: 150,
+                width: 40,
+                height: 60,
+                jumping: false,
+                sliding: false,
+                onGround: true
+            },
+            obstacles: [],
+            collectibles: [],
+            powerUps: []
+        };
+        
+        let currentScreen = 'loading';
+        let gameLoop;
+        let audioContext = null;
+        let backgroundMusicInterval = null;
+        let jumpStartTime = 0;
+        let lastObstacleSpawn = 0;
+        let lastCoinSpawn = 0;
+        
+        // Audio System (simplified)
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log('🎵 Audio initialized');
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+        
+        function playSound(frequency = 440, duration = 150, type = 'sine', volume = 0.1) {
+            if (!gameState.audioEnabled || !audioContext) return;
+            
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = type;
+                
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration/1000);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration/1000);
+            } catch (e) {
+                console.log('Audio error:', e);
+            }
+        }
+        
+        // Screen Management
+        function showScreen(screenName) {
+            const screens = ['loading', 'menu', 'instructions', 'game', 'gameover'];
+            screens.forEach(name => {
+                const screen = document.getElementById(name + '-screen');
+                if (screen) screen.classList.add('hidden');
+            });
+            
+            const targetScreen = document.getElementById(screenName + '-screen');
+            if (targetScreen) {
+                targetScreen.classList.remove('hidden');
+                currentScreen = screenName;
+            }
+        }
+        
+        function showMenu() {
+            if (gameLoop) clearInterval(gameLoop);
+            showScreen('menu');
+            document.getElementById('best-distance').textContent = gameState.bestDistance + 'm';
+        }
+        
+        function showInstructions() {
+            showScreen('instructions');
+        }
+        
+        function toggleAudio() {
+            gameState.audioEnabled = !gameState.audioEnabled;
+            if (gameState.audioEnabled) {
+                initAudio();
+                playSound(660, 100);
+            }
+        }
+        
+        // Game Logic
+        function startGame() {
+            gameState.distance = 0;
+            gameState.coins = 0;
+            gameState.speed = 5.0;
+            gameState.gameActive = true;
+            gameState.obstacles = [];
+            gameState.collectibles = [];
+            gameState.powerUps = [];
+            gameState.runner = {
+                x: 100,
+                y: 150,
+                width: 40,
+                height: 60,
+                jumping: false,
+                sliding: false,
+                onGround: true
+            };
+            
+            showScreen('game');
+            clearGameCanvas();
+            
+            if (audioContext) {
+                audioContext.resume();
+            }
+            
+            startGameLoop();
+        }
+        
+        function clearGameCanvas() {
+            const canvas = document.getElementById('game-canvas');
+            const existingElements = canvas.querySelectorAll('.obstacle, .coin, .power-up');
+            existingElements.forEach(el => el.remove());
+        }
+        
+        function startGameLoop() {
+            gameLoop = setInterval(() => {
+                if (!gameState.gameActive) return;
+                
+                updateGame();
+                renderGame();
+                
+            }, 1000/60); // 60 FPS
+        }
+        
+        function updateGame() {
+            // Update distance and speed
+            gameState.distance += gameState.speed * 0.1;
+            gameState.speed = 5.0 + (gameState.distance / 500) * 0.5;
+            
+            // Update runner physics
+            updateRunner();
+            
+            // Spawn obstacles and collectibles
+            spawnGameElements();
+            
+            // Move and update game elements
+            updateGameElements();
+            
+            // Check collisions
+            checkCollisions();
+            
+            // Update UI
+            updateUI();
+        }
+        
+        function updateRunner() {
+            const runner = gameState.runner;
+            const runnerElement = document.getElementById('runner');
+            
+            if (runner.jumping && Date.now() - jumpStartTime > 600) {
+                runner.jumping = false;
+                runner.onGround = true;
+                runnerElement.classList.remove('jumping');
+            }
+            
+            if (runner.sliding && Date.now() - jumpStartTime > 500) {
+                runner.sliding = false;
+                runnerElement.classList.remove('sliding');
+            }
+        }
+        
+        function spawnGameElements() {
+            const now = Date.now();
+            
+            // Spawn obstacles
+            if (now - lastObstacleSpawn > 2000 - (gameState.speed * 50)) {
+                spawnObstacle();
+                lastObstacleSpawn = now;
+            }
+            
+            // Spawn coins
+            if (now - lastCoinSpawn > 1000) {
+                if (Math.random() < 0.7) spawnCoin();
+                lastCoinSpawn = now;
+            }
+        }
+        
+        function spawnObstacle() {
+            const canvas = document.getElementById('game-canvas');
+            const obstacle = document.createElement('div');
+            obstacle.className = 'obstacle';
+            
+            const width = 30;
+            const height = 40;
+            const bottom = 150;
+            
+            obstacle.style.width = width + 'px';
+            obstacle.style.height = height + 'px';
+            obstacle.style.right = '0px';
+            obstacle.style.bottom = bottom + 'px';
+            
+            canvas.appendChild(obstacle);
+            gameState.obstacles.push({element: obstacle, x: canvas.offsetWidth, y: bottom, width, height});
+        }
+        
+        function spawnCoin() {
+            const canvas = document.getElementById('game-canvas');
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            
+            const x = canvas.offsetWidth;
+            const y = 150 + Math.random() * 100;
+            
+            coin.style.right = '0px';
+            coin.style.bottom = y + 'px';
+            
+            canvas.appendChild(coin);
+            gameState.collectibles.push({element: coin, x, y, width: 25, height: 25});
+        }
+        
+        function updateGameElements() {
+            const canvas = document.getElementById('game-canvas');
+            const canvasWidth = canvas.offsetWidth;
+            
+            // Update obstacles
+            gameState.obstacles = gameState.obstacles.filter(obstacle => {
+                obstacle.x -= gameState.speed;
+                obstacle.element.style.right = (canvasWidth - obstacle.x - obstacle.width) + 'px';
+                
+                if (obstacle.x + obstacle.width < 0) {
+                    obstacle.element.remove();
+                    return false;
+                }
+                return true;
+            });
+            
+            // Update collectibles
+            gameState.collectibles = gameState.collectibles.filter(collectible => {
+                collectible.x -= gameState.speed;
+                collectible.element.style.right = (canvasWidth - collectible.x - collectible.width) + 'px';
+                
+                if (collectible.x + collectible.width < 0) {
+                    collectible.element.remove();
+                    return false;
+                }
+                return true;
+            });
+        }
+        
+        function checkCollisions() {
+            const runner = gameState.runner;
+            
+            // Check obstacle collisions
+            gameState.obstacles.forEach(obstacle => {
+                if (isColliding(runner, obstacle)) {
+                    gameOver();
+                }
+            });
+            
+            // Check coin collections
+            gameState.collectibles = gameState.collectibles.filter(collectible => {
+                if (isColliding(runner, collectible)) {
+                    collectCoin(collectible);
+                    return false;
+                }
+                return true;
+            });
+        }
+        
+        function isColliding(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+        
+        function collectCoin(coin) {
+            gameState.coins++;
+            coin.element.remove();
+            playSound(800, 100, 'triangle', 0.08);
+        }
+        
+        function updateUI() {
+            document.getElementById('distance').textContent = Math.floor(gameState.distance) + 'm';
+            document.getElementById('coins').textContent = gameState.coins;
+            document.getElementById('speed').textContent = gameState.speed.toFixed(1);
+        }
+        
+        function renderGame() {
+            // Game rendering handled by CSS
+        }
+        
+        // Jump mechanics
+        function jump() {
+            if (!gameState.gameActive || gameState.runner.jumping) return;
+            
+            gameState.runner.jumping = true;
+            gameState.runner.onGround = false;
+            jumpStartTime = Date.now();
+            
+            const runnerElement = document.getElementById('runner');
+            runnerElement.classList.add('jumping');
+            
+            playSound(600, 150, 'square', 0.08);
+        }
+        
+        // Game Over
+        function gameOver() {
+            gameState.gameActive = false;
+            clearInterval(gameLoop);
+            
+            playSound(220, 500, 'sawtooth', 0.15);
+            
+            const finalDistance = Math.floor(gameState.distance);
+            const isNewRecord = finalDistance > gameState.bestDistance;
+            
+            if (isNewRecord) {
+                gameState.bestDistance = finalDistance;
+                localStorage.setItem('neonRunnerBestDistance', gameState.bestDistance.toString());
+            }
+            
+            setTimeout(() => {
+                document.getElementById('final-distance').textContent = finalDistance + 'm';
+                document.getElementById('final-coins').textContent = gameState.coins;
+                
+                if (isNewRecord) {
+                    document.getElementById('new-record').classList.remove('hidden');
+                } else {
+                    document.getElementById('new-record').classList.add('hidden');
+                }
+                
+                showScreen('gameover');
+            }, 1000);
+        }
+        
+        function shareScore() {
+            const distance = Math.floor(gameState.distance);
+            const text = `🚀 ¡Corrí ${distance}m en Neon Runner! ¿Puedes superarme? 🎮✨`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Neon Runner - LIPA Studios',
+                    text: text,
+                    url: window.location.href
+                });
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(text + ' ' + window.location.href).then(() => {
+                    alert('¡Puntuación copiada!');
+                });
+            } else {
+                alert(text);
+            }
+        }
+        
+        // Controls
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (currentScreen === 'game') {
+                    jump();
+                }
+            }
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (currentScreen === 'game') {
+                if (e.target.closest('#game-screen')) {
+                    jump();
+                }
+            }
+        });
+        
+        document.addEventListener('touchstart', function(e) {
+            if (currentScreen === 'game') {
+                e.preventDefault();
+                jump();
+            }
+        });
+        
+        // Initialize - Fast loading
+        setTimeout(() => {
+            initAudio();
+            showMenu();
+            console.log('🚀 Neon Runner - Test Local Ready!');
+            
+            // Debug: Force show menu if stuck on loading
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                loadingScreen.style.display = 'none';
+            }
+            
+            const menuScreen = document.getElementById('menu-screen');
+            if (menuScreen) {
+                menuScreen.style.display = 'flex';
+                menuScreen.classList.remove('hidden');
+            }
+            
+        }, 500); // Even faster loading
+    </script>
+</body>
+</html>
