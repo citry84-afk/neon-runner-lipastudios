@@ -305,8 +305,8 @@
             font-size: clamp(2.5rem, 8vw, 4rem);
             font-weight: 900;
             color: #FF0080;
-            text-shadow: 0 0 30px #FF0080;
-            margin-bottom: 10px;
+            text-shadow: 0 0 30px #FF0080, 0 0 60px #FF0080;
+            margin-bottom: 20px;
             letter-spacing: 0.1em;
             animation: titlePulse 2s ease-in-out infinite;
         }
@@ -379,13 +379,12 @@
             display: none !important;
         }
         
-        /* FORCE GAME VISIBILITY - SIMPLIFIED */
+        /* Game Screen Layout */
         #game-screen {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 20px !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
         
         /* Game Elements */
@@ -1676,19 +1675,14 @@
                     loadingScreen.classList.add('hidden');
                 }
                 
-                // FORCE SHOW GAME SCREEN DIRECTLY FOR TESTING
-                const gameScreen = document.getElementById('game-screen');
-                if (gameScreen) {
-                    gameScreen.style.display = 'flex';
-                    gameScreen.classList.remove('hidden');
+                // RESTORE NORMAL MENU FLOW
+                const menuScreen = document.getElementById('menu-screen');
+                if (menuScreen) {
+                    menuScreen.style.display = 'flex';
+                    menuScreen.classList.remove('hidden');
                 }
                 
-                currentScreen = 'game';
-                
-                // Start game immediately
-                setTimeout(() => {
-                    startGame();
-                }, 500);
+                currentScreen = 'menu';
                 
                 // Update best distance
                 const bestDistanceEl = document.getElementById('best-distance');
