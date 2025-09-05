@@ -242,7 +242,11 @@
             margin: 80px 0;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #2a1a3e 0%, #36335e 50%, #4f4a70 100%);
+            border: 2px solid #00FFFF;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            min-height: 400px;
         }
         
         /* UI Overlay */
@@ -376,18 +380,35 @@
             display: none !important;
         }
         
+        /* FORCE GAME VISIBILITY */
+        #game-screen {
+            display: flex !important;
+            background: linear-gradient(135deg, #2a1a3e 0%, #36335e 50%, #4f4a70 100%) !important;
+        }
+        
+        #game-screen .game-canvas {
+            background: linear-gradient(135deg, #2a1a3e 0%, #36335e 50%, #4f4a70 100%) !important;
+            border: 3px solid #00FFFF !important;
+            min-height: 500px !important;
+        }
+        
         /* Game Elements */
         .runner {
             position: absolute;
             left: 100px;
             bottom: 150px;
-            width: 40px;
-            height: 60px;
-            background: linear-gradient(45deg, #FF0080, #00FFFF);
+            width: 50px;
+            height: 70px;
+            background: linear-gradient(45deg, #FF0080, #00FFFF, #FFFF00);
+            border: 3px solid #FFFFFF;
             border-radius: 8px;
-            box-shadow: 0 0 20px #FF0080;
+            box-shadow: 0 0 30px #FF0080, 0 0 60px #00FFFF;
             transition: all 0.3s ease;
             z-index: 50;
+            /* Force visibility */
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         
         .runner.jumping {
@@ -1659,12 +1680,19 @@
                     loadingScreen.classList.add('hidden');
                 }
                 
-                if (menuScreen) {
-                    menuScreen.style.display = 'flex';
-                    menuScreen.classList.remove('hidden');
+                // FORCE SHOW GAME SCREEN DIRECTLY FOR TESTING
+                const gameScreen = document.getElementById('game-screen');
+                if (gameScreen) {
+                    gameScreen.style.display = 'flex';
+                    gameScreen.classList.remove('hidden');
                 }
                 
-                currentScreen = 'menu';
+                currentScreen = 'game';
+                
+                // Start game immediately
+                setTimeout(() => {
+                    startGame();
+                }, 500);
                 
                 // Update best distance
                 const bestDistanceEl = document.getElementById('best-distance');
