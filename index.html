@@ -127,20 +127,58 @@
             animation: jumpAnimation 0.6s ease-out;
         }
         
+        .runner.double-jump {
+            animation: doubleJumpAnimation 0.8s ease-out;
+        }
+        
+        .runner.triple-jump {
+            animation: tripleJumpAnimation 1s ease-out;
+        }
+        
         @keyframes jumpAnimation {
             0% { bottom: 50px; }
             50% { bottom: 200px; }
             100% { bottom: 50px; }
         }
         
+        @keyframes doubleJumpAnimation {
+            0% { bottom: 50px; transform: rotate(0deg); }
+            25% { bottom: 250px; transform: rotate(90deg); }
+            50% { bottom: 300px; transform: rotate(180deg); }
+            75% { bottom: 250px; transform: rotate(270deg); }
+            100% { bottom: 50px; transform: rotate(360deg); }
+        }
+        
+        @keyframes tripleJumpAnimation {
+            0% { bottom: 50px; transform: rotate(0deg) scale(1); box-shadow: 0 0 20px #FF0080; }
+            20% { bottom: 300px; transform: rotate(120deg) scale(1.2); box-shadow: 0 0 40px #FF0080, 0 0 60px #00FFFF; }
+            40% { bottom: 400px; transform: rotate(240deg) scale(1.5); box-shadow: 0 0 60px #FF0080, 0 0 80px #00FFFF, 0 0 100px #FFFF00; }
+            60% { bottom: 450px; transform: rotate(360deg) scale(1.8); box-shadow: 0 0 80px #FF0080, 0 0 100px #00FFFF, 0 0 120px #FFFF00; }
+            80% { bottom: 300px; transform: rotate(480deg) scale(1.2); box-shadow: 0 0 40px #FF0080, 0 0 60px #00FFFF; }
+            100% { bottom: 50px; transform: rotate(720deg) scale(1); box-shadow: 0 0 20px #FF0080; }
+        }
+        
         .obstacle {
             position: absolute;
             width: 40px;
             height: 60px;
-            background: linear-gradient(45deg, #FF4500, #FFFF00);
-            border-radius: 5px;
+            background: linear-gradient(45deg, #FF0000, #8B0000);
+            border: 3px solid #FFFFFF;
+            border-radius: 3px;
             bottom: 50px;
-            box-shadow: 0 0 15px #FF4500;
+            box-shadow: 0 0 25px #FF0000, inset 0 0 10px rgba(255,255,255,0.3);
+            animation: dangerPulse 0.8s ease-in-out infinite;
+        }
+        
+        @keyframes dangerPulse {
+            0%, 100% { 
+                box-shadow: 0 0 25px #FF0000, inset 0 0 10px rgba(255,255,255,0.3);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 40px #FF0000, 0 0 60px #FF0000, inset 0 0 15px rgba(255,255,255,0.5);
+                transform: scale(1.05);
+            }
         }
         
         .coin {
@@ -284,26 +322,44 @@
         
         .power-up {
             position: absolute;
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px;
-            animation: powerUpPulse 0.8s ease-in-out infinite;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 0 30px;
+            animation: powerUpPulse 0.6s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 900;
         }
         
         .power-up.shield {
             background: radial-gradient(circle, #39FF14, #00FF00);
-            box-shadow: 0 0 20px #39FF14;
+            box-shadow: 0 0 30px #39FF14, 0 0 50px #39FF14;
+        }
+        .power-up.shield::before {
+            content: '🛡️';
+            font-size: 1.5rem;
         }
         
         .power-up.slow-motion {
             background: radial-gradient(circle, #00FFFF, #0080FF);
-            box-shadow: 0 0 20px #00FFFF;
+            box-shadow: 0 0 30px #00FFFF, 0 0 50px #00FFFF;
+        }
+        .power-up.slow-motion::before {
+            content: '⏰';
+            font-size: 1.5rem;
         }
         
         .power-up.magnet {
             background: radial-gradient(circle, #FF0080, #FF0040);
-            box-shadow: 0 0 20px #FF0080;
+            box-shadow: 0 0 30px #FF0080, 0 0 50px #FF0080;
+        }
+        .power-up.magnet::before {
+            content: '🧲';
+            font-size: 1.5rem;
         }
         
         @keyframes powerUpPulse {
@@ -360,9 +416,9 @@
         .ui-label {
             font-size: 0.8rem;
             opacity: 0.8;
-            margin-bottom: 5px;
-        }
-        
+                margin-bottom: 5px;
+            }
+            
         .ui-value {
             font-size: 1.5rem;
             font-weight: 900;
@@ -372,7 +428,7 @@
         
         .instructions {
             color: #39FF14;
-            font-size: 1.2rem;
+                font-size: 1.2rem;
             text-align: center;
             margin: 20px 0;
         }
@@ -385,9 +441,9 @@
             color: #39FF14;
             padding: 10px;
             border-radius: 5px;
-            font-size: 0.8rem;
-        }
-        
+                font-size: 0.8rem;
+            }
+            
         .hidden {
             display: none !important;
         }
@@ -410,13 +466,13 @@
 <body>
     <div class="debug" id="debug">
         Status: Loading...
-    </div>
-
-    <!-- Menu Screen -->
-    <div id="menu-screen" class="screen">
-        <div class="title">NEON RUNNER</div>
-        <div class="subtitle">CYBERPUNK HIGHWAY</div>
+        </div>
         
+        <!-- Menu Screen -->
+    <div id="menu-screen" class="screen">
+            <div class="title">NEON RUNNER</div>
+            <div class="subtitle">CYBERPUNK HIGHWAY</div>
+            
         <button class="btn" onclick="startGame()">🏃 EMPEZAR JUEGO</button>
         <button class="btn" onclick="testVisuals()">🎨 TEST VISUAL</button>
         <button class="btn" onclick="testAudio()">🔊 TEST AUDIO</button>
@@ -426,31 +482,31 @@
                 <div class="ui-label">MEJOR DISTANCIA</div>
                 <div class="ui-value" id="best-distance">0m</div>
             </div>
+            </div>
         </div>
-    </div>
-    
-    <!-- Game Screen -->
-    <div id="game-screen" class="screen hidden">
+        
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen hidden">
         <div class="ui">
             <div class="ui-item">
                 <div class="ui-label">DISTANCIA</div>
                 <div class="ui-value" id="distance">0m</div>
-            </div>
+                    </div>
             <div class="ui-item">
                 <div class="ui-label">MONEDAS</div>
                 <div class="ui-value" id="coins">0</div>
-            </div>
+                    </div>
             <div class="ui-item">
                 <div class="ui-label">VELOCIDAD</div>
                 <div class="ui-value" id="speed">5.0</div>
-            </div>
-        </div>
-        
+                    </div>
+                </div>
+                
         <div class="game-area" id="game-area">
-            <div id="runner" class="runner"></div>
-        </div>
-        
-        <div class="instructions">
+                <div id="runner" class="runner"></div>
+            </div>
+            
+            <div class="instructions">
             <strong>CLICK</strong> para saltar • <strong>DOBLE CLICK</strong> para doble salto<br>
             🛡️ <strong>Verde</strong> = Escudo • 🔵 <strong>Azul</strong> = Slow Motion • 🔴 <strong>Magenta</strong> = Imán monedas
         </div>
@@ -468,6 +524,7 @@
             obstacles: [],
             collectibles: [],
             doubleJumpAvailable: true,
+            tripleJumpAvailable: true,
             invulnerable: false,
             shieldActive: false,
             slowMotionActive: false,
@@ -568,7 +625,7 @@
                         
                         // Stop after 3 seconds
                         setTimeout(() => {
-                            stopBackgroundMusic();
+                    stopBackgroundMusic();
                             updateDebug('Background music stopped');
                         }, 3000);
                     }, 600);
@@ -642,11 +699,11 @@
             
             if (audioContext) {
                 audioContext.resume().then(() => {
-                    setTimeout(() => {
+                setTimeout(() => {
                         if (gameState.gameActive) {
-                            playBackgroundMusic();
-                        }
-                    }, 500);
+                        playBackgroundMusic();
+                    }
+                }, 500);
                 });
             }
             
@@ -680,7 +737,7 @@
                 
                 // Frame rate limiting for consistent performance
                 if (currentTime - lastFrameTime >= frameTime) {
-                    updateGame();
+                updateGame();
                     lastFrameTime = currentTime;
                 }
                 
@@ -833,17 +890,17 @@
                 
                 // Process obstacles
                 let obstacleCollision = false;
-                gameState.obstacles = gameState.obstacles.filter(obstacle => {
+            gameState.obstacles = gameState.obstacles.filter(obstacle => {
                     obstacle.x -= speed;
-                    
+                
                     if (obstacle.x < -100) {
                         try {
-                            obstacle.element.remove();
+                    obstacle.element.remove();
                         } catch (e) {
                             // Silent cleanup
                         }
-                        return false;
-                    }
+                    return false;
+                }
                     
                     // Queue DOM update
                     const rightPosition = canvasWidth - obstacle.x;
@@ -859,9 +916,9 @@
                         }
                     }
                     
-                    return true;
-                });
-                
+                return true;
+            });
+            
                 // Process collectibles
                 gameState.collectibles = gameState.collectibles.filter(coin => {
                     coin.x -= speed;
@@ -872,7 +929,7 @@
                         } catch (e) {
                             // Silent cleanup
                         }
-                        return false;
+                    return false;
                     }
                     
                     // Queue DOM update
@@ -887,13 +944,13 @@
                             } else if (coin.type === 'power-up') {
                                 collectPowerUp(coin);
                             }
-                            return false;
-                        }
+                    return false;
+                }
                     }
                     
-                    return true;
-                });
-                
+                return true;
+            });
+            
                 // Apply all DOM updates at once
                 obstacleUpdates.forEach(update => {
                     try {
@@ -1396,7 +1453,7 @@
                 runner.classList.remove('jumping');
                 runner.classList.add('double-jump');
                 
-                setTimeout(() => {
+        setTimeout(() => {
                     runner.classList.remove('double-jump');
                     gameState.doubleJumpAvailable = true;
                 }, 800);
