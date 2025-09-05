@@ -1283,9 +1283,19 @@
         }
         
         function renderGame() {
-            // Game rendering is handled by CSS animations and DOM updates
-            // This function can be extended for more complex graphics
+            // Ensure runner is visible and positioned correctly
+            const runnerElement = document.getElementById('runner');
+            if (runnerElement && gameState.gameActive) {
+                // Update runner position and classes
+                runnerElement.style.left = gameState.runner.x + 'px';
+                runnerElement.style.bottom = gameState.runner.y + 'px';
+                
+                // Ensure runner is visible
+                runnerElement.style.display = 'block';
+                runnerElement.style.opacity = '1';
+            }
         }
+        
         
         // Jump mechanics
         function jump() {
@@ -1624,7 +1634,14 @@
         // Initialize
         setTimeout(() => {
             initAudio();
-            showMenu();
+            
+            // Force show menu screen immediately
+            document.getElementById('loading-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.remove('hidden');
+            currentScreen = 'menu';
+            
+            // Update best distance
+            document.getElementById('best-distance').textContent = gameState.bestDistance + 'm';
             
             window.trackEvent('game_loaded', {
                 load_time: Date.now() - window.sessionStart,
