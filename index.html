@@ -1658,15 +1658,14 @@
             }
         });
         
-        // Initialize - FORCED VISIBILITY for production
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 DOM loaded, initializing...');
+        // Initialize - SIMPLE AND DIRECT
+        function initializeGame() {
+            console.log('🚀 Initializing game...');
             
-            // FORCE immediate visibility - no waiting
-            setTimeout(() => {
+            try {
                 initAudio();
                 
-                // FORCE show menu - multiple methods to ensure it works
+                // FORCE show menu
                 const loadingScreen = document.getElementById('loading-screen');
                 const menuScreen = document.getElementById('menu-screen');
                 
@@ -1675,8 +1674,6 @@
                     loadingScreen.classList.add('hidden');
                 }
                 
-                // RESTORE NORMAL MENU FLOW
-                const menuScreen = document.getElementById('menu-screen');
                 if (menuScreen) {
                     menuScreen.style.display = 'flex';
                     menuScreen.classList.remove('hidden');
@@ -1690,24 +1687,44 @@
                     bestDistanceEl.textContent = gameState.bestDistance + 'm';
                 }
                 
-                console.log('🎮 Menu should be visible now');
+                console.log('🎮 Menu initialized successfully');
                 
-                window.trackEvent('game_loaded', {
-                    load_time: Date.now() - window.sessionStart,
-                    returning_user: localStorage.getItem('neonRunnerReturning') === 'true',
-                    device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
-                });
+                // Track game loaded
+                if (typeof window.trackEvent === 'function') {
+                    window.trackEvent('game_loaded', {
+                        load_time: Date.now() - (window.sessionStart || Date.now()),
+                        returning_user: localStorage.getItem('neonRunnerReturning') === 'true',
+                        device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
+                    });
+                }
                 
                 // Mark as returning user
                 localStorage.setItem('neonRunnerReturning', 'true');
                 
-                // Initialize social media automation
-                if (typeof SocialMediaBot !== 'undefined') {
-                    SocialMediaBot.onGameDeploy();
+            } catch (error) {
+                console.error('❌ Initialization error:', error);
+                // Force show menu anyway
+                const menuScreen = document.getElementById('menu-screen');
+                if (menuScreen) {
+                    menuScreen.style.display = 'flex';
+                    menuScreen.classList.remove('hidden');
                 }
-                
-            }, 1000);
+                currentScreen = 'menu';
+            }
+        }
+        
+        // Multiple initialization attempts
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initializeGame, 1000);
         });
+        
+        // Backup initialization
+        window.addEventListener('load', function() {
+            setTimeout(initializeGame, 1500);
+        });
+        
+        // Emergency initialization
+        setTimeout(initializeGame, 3000);
         
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
