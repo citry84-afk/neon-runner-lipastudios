@@ -110,44 +110,41 @@
         
         .game-area {
             width: 100vw;
-            height: 100vh;
-            border: none;
-            border-radius: 0;
-            background: linear-gradient(180deg, #1a0a1a 0%, #0a0a0a 30%, #0a1a1a 70%, #1a0a1a 100%);
+            height: 60vh;
+            border: 2px solid #00FFFF;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a1a1a 100%);
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
             margin: 0;
             overflow: hidden;
-            box-shadow: none;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
             /* Performance optimizations */
             will-change: transform;
             contain: layout style paint;
-            transform: translateZ(0);
-            /* VERTICAL MOBILE SETUP */
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
             z-index: 10;
+            /* HORIZONTAL GAMEPLAY EN PANTALLA VERTICAL */
+            max-width: 95vw;
         }
         
         .runner {
             position: absolute;
-            left: 50%;
-            bottom: 100px;
-            width: 60px;
+            left: 80px;
+            bottom: 20px;
+            width: 40px;
             height: 60px;
             background: linear-gradient(45deg, #FF0080, #00FFFF);
-            border-radius: 50%;
+            border-radius: 8px;
             box-shadow: 0 0 20px #FF0080;
-            transition: left 0.2s ease;
+            transition: all 0.3s ease;
             /* Performance optimizations */
-            will-change: transform, box-shadow, left;
-            transform: translateZ(0) translateX(-50%);
+            will-change: transform, box-shadow;
+            transform: translateZ(0);
             z-index: 20;
-            /* VERTICAL RUNNER STYLING */
-            border: 3px solid #FFFFFF;
-            animation: runnerPulse 1s ease-in-out infinite;
+            /* HORIZONTAL RUNNER OPTIMIZADO PARA VERTICAL */
+            border: 2px solid #FFFFFF;
         }
         
         @keyframes runnerPulse {
@@ -198,19 +195,17 @@
         
         .obstacle {
             position: absolute;
-            width: 80px;
-            height: 40px;
+            width: 30px;
+            height: 50px;
             background: linear-gradient(45deg, #FF0000, #8B0000);
-            border: 3px solid #FFFFFF;
-            border-radius: 8px;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
+            border: 2px solid #FFFFFF;
+            border-radius: 5px;
+            bottom: 20px;
+            right: 0px;
             box-shadow: 0 0 25px #FF0000, inset 0 0 10px rgba(255,255,255,0.3);
             animation: dangerPulse 0.8s ease-in-out infinite;
             z-index: 15;
-            /* VERTICAL OBSTACLE - MOVES DOWN */
-            transition: top 0.1s linear;
+            /* HORIZONTAL OBSTACLE - OPTIMIZADO PARA PANTALLA VERTICAL */
         }
         
         @keyframes dangerPulse {
@@ -226,23 +221,21 @@
         
         .coin {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 25px;
+            height: 25px;
             background: radial-gradient(circle, #FFFF00, #FFD700);
             border-radius: 50%;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 0 20px #FFFF00;
+            bottom: 40px;
+            right: 0px;
+            box-shadow: 0 0 15px #FFFF00;
             animation: coinSpin 1s linear infinite, coinGlow 2s ease-in-out infinite;
             z-index: 15;
-            /* VERTICAL COIN - MOVES DOWN */
-            transition: top 0.1s linear;
+            /* HORIZONTAL COIN - OPTIMIZADO PARA PANTALLA VERTICAL */
         }
         
         @keyframes coinSpin {
-            from { transform: translateX(-50%) rotateY(0deg); }
-            to { transform: translateX(-50%) rotateY(360deg); }
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
         }
         
         @keyframes coinGlow {
@@ -617,25 +610,14 @@
                 <div class="flight-energy-bar" id="flightEnergyBar"></div>
             </div>
             
-            <!-- VERTICAL MOBILE CONTROLS -->
-            <div style="position: fixed; bottom: 120px; left: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-between; padding: 20px;">
-                <!-- LEFT CONTROL -->
-                <div id="leftControl" style="width: 100px; height: 100px; background: rgba(255,0,128,0.3); border: 3px solid #FF0080; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #FF0080; font-weight: 900; user-select: none; touch-action: manipulation;">
-                    ←
+            <!-- SIMPLE MOBILE INSTRUCTIONS -->
+            <div style="position: fixed; bottom: 80px; left: 0; width: 100%; z-index: 1000; display: flex; justify-content: center; padding: 20px;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #00FFFF; font-size: 0.9rem; text-align: center; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; border: 2px solid #00FFFF;">
+                    <div style="margin-bottom: 5px; font-size: 1.2rem;">🚀 NEON RUNNER</div>
+                    <div style="margin-bottom: 3px;">👆 <strong>TAP PANTALLA = SALTAR</strong></div>
+                    <div style="font-size: 0.8rem;">🛡️ Verde=Escudo 🔵 Azul=Lento 🧲 Rosa=Imán</div>
+                </div>
             </div>
-            
-                <!-- CENTER INSTRUCTIONS -->
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #00FFFF; font-size: 0.7rem; text-align: center; max-width: 120px;">
-                    <div style="margin-bottom: 3px;">🚀 CORRE HACIA ARRIBA</div>
-                    <div style="margin-bottom: 3px;">👆 TAP ← → PARA ESQUIVAR</div>
-                    <div>🛡️ Verde=Escudo 🔵 Azul=Lento</div>
-            </div>
-            
-                <!-- RIGHT CONTROL -->
-                <div id="rightControl" style="width: 100px; height: 100px; background: rgba(0,255,255,0.3); border: 3px solid #00FFFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #00FFFF; font-weight: 900; user-select: none; touch-action: manipulation;">
-                    →
-        </div>
-    </div>
     
         <button class="btn" onclick="showMenu()" style="position: fixed; top: 20px; right: 20px; z-index: 1001; padding: 10px 15px; font-size: 0.8rem;">🏠 MENÚ</button>
         
@@ -830,13 +812,10 @@
             showScreen('game');
             clearGameArea();
             
-            // Initialize vertical controls
-            initVerticalControls();
-            
-            // Set runner to center
+            // Reset runner to start position
             const runner = document.getElementById('runner');
             if (runner) {
-                runner.style.left = '50%';
+                runner.style.left = '80px';
             }
             
             // Initialize and start audio
@@ -898,23 +877,49 @@
         function updateGame() {
             if (!gameState.gameActive) return;
             
-            // 🚀 USAR LÓGICA VERTICAL COMPLETAMENTE
-            updateVerticalGame();
+            // 🚀 VOLVER AL GAMEPLAY HORIZONTAL PERFECTO (pero en pantalla vertical)
+            moveElements();
+            
+            // Ultra-smooth distance progression
+            gameState.distance += gameState.speed * 0.1;
+            
+            // 🚀 VELOCIDAD INFINITA - ¡HASTA LA VELOCIDAD DE LA LUZ!
+            gameState.speed += 0.008; // Aceleración constante SIN LÍMITE
             
             // Feedback épico cuando alcanza velocidades altas
-            if (gameState.speed > 8 && Math.floor(gameState.speed) % 3 === 0) {
+            if (gameState.speed > 15 && Math.floor(gameState.speed) % 5 === 0) {
                 showPerfectIndicator(`🚀 VELOCIDAD: ${Math.floor(gameState.speed)}! 🌌`);
                 playSound(800 + gameState.speed * 10, 100, 'sawtooth', 0.08);
             }
             
-            // Reset streak if no action for too long
-            if (Date.now() - gameState.lastActionTime > 4000 && gameState.streak > 0) {
+            // Reset streak if no action for too long (makes it more challenging)
+            if (Date.now() - gameState.lastActionTime > 3000 && gameState.streak > 0) {
                 gameState.streak = 0;
                 updateDebug('Streak reset - no action');
             }
             
-            // ✅ TODO EL GAMEPLAY YA ESTÁ EN updateVerticalGame() 
-            // No necesitamos spawning ni moveElements() aquí
+            // Spawn elements balanced for performance and action
+            const obstacleChance = gameState.adrenalineMode ? 0.010 : 0.012;
+            const coinChance = gameState.adrenalineMode ? 0.018 : 0.015;
+            
+            // FAIR OBSTACLE SPAWNING (Always beatable)
+            if (gameState.obstacles.length < 2 && Math.random() < (obstacleChance * 0.7)) {
+                // Only spawn if there's safe spacing from last obstacle
+                const lastObstacle = gameState.obstacles[gameState.obstacles.length - 1];
+                if (!lastObstacle || lastObstacle.x < 500) { // MINIMUM 500px spacing
+                    spawnObstacle();
+                }
+            }
+            
+            if (gameState.collectibles.length < 5 && Math.random() < coinChance) {
+                spawnCoin();
+            }
+            
+            if (gameState.collectibles.length < 6 && Math.random() < 0.003) {
+                spawnPowerUp();
+            }
+            
+            updateUI();
         }
         
         function spawnObstacle() {
@@ -2034,76 +2039,30 @@ https://neon-runner-lipastudios.netlify.app
             return false;
         }
 
-        // VERTICAL MOBILE CONTROLS - Specialized for vertical gameplay
-        function initVerticalControls() {
-            const leftControl = document.getElementById('leftControl');
-            const rightControl = document.getElementById('rightControl');
-            
-            if (leftControl) {
-                leftControl.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    moveHorizontal('left');
-                    // Visual feedback
-                    this.style.background = 'rgba(255,0,128,0.6)';
-                    setTimeout(() => {
-                        this.style.background = 'rgba(255,0,128,0.3)';
-                    }, 150);
-                });
-                
-                leftControl.addEventListener('click', function(e) {
-                e.preventDefault();
-                    e.stopPropagation();
-                    moveHorizontal('left');
-                });
+        // SIMPLE TOUCH CONTROLS - TAP ANYWHERE = JUMP
+        document.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            if (currentScreen === 'game') {
+                jump();
             }
-            
-            if (rightControl) {
-                rightControl.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    moveHorizontal('right');
-                    // Visual feedback
-                    this.style.background = 'rgba(0,255,255,0.6)';
-        setTimeout(() => {
-                        this.style.background = 'rgba(0,255,255,0.3)';
-                    }, 150);
-                });
-                
-                rightControl.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    moveHorizontal('right');
-                });
-            }
-        }
+        });
         
-        // Mouse controls (for desktop testing) - SIMPLIFICADOS
+        // Mouse controls (for desktop testing) - VOLVER A SIMPLE TAP = SALTAR
         document.addEventListener('click', function(e) {
             // Don't interfere with control buttons
             if (e.target.id === 'leftControl' || e.target.id === 'rightControl') return;
             
-            // For testing - click left/right side of screen
+            // Simple tap = jump (como el original)
             if (currentScreen === 'game') {
-                const clickX = e.clientX;
-                const screenWidth = window.innerWidth;
-                
-                if (clickX < screenWidth / 2) {
-                    moveHorizontal('left');
-                } else {
-                    moveHorizontal('right');
-                }
+                jump();
             }
         });
         
-        // Keyboard controls (for desktop testing)
+        // Keyboard controls (for desktop testing) - VOLVER A SIMPLE SPACE = SALTAR
         document.addEventListener('keydown', function(e) {
-            if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+            if (e.code === 'Space') {
                 e.preventDefault();
-                moveHorizontal('left');
-            } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
-                e.preventDefault();
-                moveHorizontal('right');
+                jump();
             } else if (e.code === 'Escape') {
                 e.preventDefault();
                 showMenu();
