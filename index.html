@@ -22,6 +22,22 @@
         };
     </script>
     
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4129506161314540"
+            crossorigin="anonymous"></script>
+    
+    <!-- H5 Games Ads API -->
+    <script>
+        window.adBreak = function(config) {
+            console.log('AdBreak called:', config);
+            // Simulate ad experience for testing
+            if (config.beforeAd) config.beforeAd();
+            setTimeout(() => {
+                if (config.afterAd) config.afterAd();
+            }, config.type === 'reward' ? 3000 : 1500);
+        };
+    </script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
         
@@ -526,21 +542,32 @@
         
         <!-- Game Screen -->
         <div id="game-screen" class="screen hidden">
+        
+        <!-- TOP BANNER AD -->
+        <div style="text-align: center; margin: 5px 0;">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-4129506161314540"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            </div>
+            
         <div class="ui">
             <div class="ui-item">
                 <div class="ui-label">DISTANCIA</div>
                 <div class="ui-value" id="distance">0m</div>
-                    </div>
+            </div>
             <div class="ui-item">
                 <div class="ui-label">MONEDAS</div>
                 <div class="ui-value" id="coins">0</div>
-                    </div>
+        </div>
             <div class="ui-item">
                 <div class="ui-label">VELOCIDAD</div>
                 <div class="ui-value" id="speed">5.0</div>
-                    </div>
                 </div>
-                
+            </div>
+            
         <div class="game-area" id="game-area">
                 <div id="runner" class="runner"></div>
             </div>
@@ -549,14 +576,24 @@
             <div class="flight-energy-container" id="flightEnergyContainer">
                 <div class="flight-energy-label">🚀 ENERGÍA DE VUELO</div>
                 <div class="flight-energy-bar" id="flightEnergyBar"></div>
-        </div>
-        
+            </div>
+            
             <div class="instructions">
             <strong>TAP</strong> para saltar • <strong>TAP mientras saltas</strong> para doble salto<br>
             🛡️ <strong>Verde</strong> = Escudo • 🔵 <strong>Azul</strong> = Slow Motion • 🔴 <strong>Magenta</strong> = Imán monedas
             </div>
             
         <button class="btn" onclick="showMenu()">🏠 MENÚ</button>
+        
+        <!-- BOTTOM BANNER AD -->
+        <div style="text-align: center; margin: 10px 0;">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-4129506161314540"
+             data-ad-slot="0987654321"
+                 data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
     </div>
     
     <script>
@@ -794,12 +831,17 @@
         }
         
         function updateGame() {
-            // Update distance and speed (PROGRESSIVE & BALANCED)
+            // Update distance and speed (INFINITE ACCELERATION!)
             gameState.distance += gameState.speed * 0.1;
             
-            // SMOOTH PROGRESSIVE SPEED INCREASE
-            const targetSpeed = Math.min(3.0 + (gameState.distance / 200), 7.0); // Max speed 7.0
-            gameState.speed = targetSpeed;
+            // 🚀 VELOCIDAD INFINITA - ¡HASTA LA VELOCIDAD DE LA LUZ!
+            gameState.speed += 0.008; // Aceleración constante SIN LÍMITE
+            
+            // Feedback épico cuando alcanza velocidades altas
+            if (gameState.speed > 15 && Math.floor(gameState.speed) % 5 === 0) {
+                showPerfectIndicator(`🚀 VELOCIDAD: ${Math.floor(gameState.speed)}! 🌌`);
+                playSound(800 + gameState.speed * 10, 100, 'sawtooth', 0.08);
+            }
             
             // Reset streak if no action for too long (makes it more challenging)
             if (Date.now() - gameState.lastActionTime > 3000 && gameState.streak > 0) {
@@ -1356,6 +1398,16 @@
             gameState.gameActive = false;
             stopBackgroundMusic();
             
+            // 💰 INTERSTITIAL AD ON GAME OVER
+            if (Math.random() < 0.4) { // 40% chance
+                adBreak({
+                    type: 'interstitial',
+                    name: 'game-over-ad',
+                    beforeAd: () => console.log('Game Over Ad starting...'),
+                    afterAd: () => console.log('Game Over Ad finished')
+                });
+            }
+            
             // 8-bit game over sound
             playSound(330, 200, 'sawtooth', 0.2);
             setTimeout(() => playSound(247, 200, 'sawtooth', 0.2), 200);
@@ -1589,10 +1641,43 @@
             }
         });
         
+        // REWARDED AD SYSTEM
+        function showRewardedAd(callback) {
+            adBreak({
+                type: 'reward',
+                name: 'extra-coins',
+                beforeAd: () => {
+                    console.log('Rewarded ad starting...');
+                    // Pause game if running
+                    if (gameState.gameActive) {
+                        gameState.gameActive = false;
+                    }
+                },
+                afterAd: () => {
+                    console.log('Rewarded ad finished');
+                    // Grant reward
+                    gameState.coins += 50;
+                    showPerfectIndicator('💰 +50 MONEDAS BONUS! 💰');
+                    playSound(1000, 200, 'triangle', 0.2);
+                    if (callback) callback();
+                }
+            });
+        }
+        
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             updateDebug('DOM loaded');
             showMenu();
+            
+            // 💰 ACTIVATE ADSENSE
+            setTimeout(() => {
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                } catch (e) {
+                    console.log('AdSense not loaded yet');
+                }
+            }, 1000);
         });
         
         // Fallback initialization
