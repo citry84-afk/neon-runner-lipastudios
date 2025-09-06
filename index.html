@@ -600,12 +600,12 @@
             <div style="text-align: center; color: #00FFFF; font-size: 0.9rem;">
                 <div style="opacity: 0.8;">MONEDAS</div>
                 <div style="font-weight: 900; color: #FFD700;" id="coins">0</div>
-            </div>
+        </div>
             <div style="text-align: center; color: #00FFFF; font-size: 0.9rem;">
                 <div style="opacity: 0.8;">VELOCIDAD</div>
                 <div style="font-weight: 900; color: #FF0080;" id="speed">3.0</div>
+                </div>
             </div>
-        </div>
             
         <div class="game-area" id="game-area">
                 <div id="runner" class="runner"></div>
@@ -622,21 +622,21 @@
                 <!-- LEFT CONTROL -->
                 <div id="leftControl" style="width: 100px; height: 100px; background: rgba(255,0,128,0.3); border: 3px solid #FF0080; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #FF0080; font-weight: 900; user-select: none; touch-action: manipulation;">
                     ←
-                </div>
-                
+            </div>
+            
                 <!-- CENTER INSTRUCTIONS -->
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #00FFFF; font-size: 0.7rem; text-align: center; max-width: 120px;">
                     <div style="margin-bottom: 3px;">🚀 CORRE HACIA ARRIBA</div>
                     <div style="margin-bottom: 3px;">👆 TAP ← → PARA ESQUIVAR</div>
                     <div>🛡️ Verde=Escudo 🔵 Azul=Lento</div>
-                </div>
-                
+            </div>
+            
                 <!-- RIGHT CONTROL -->
                 <div id="rightControl" style="width: 100px; height: 100px; background: rgba(0,255,255,0.3); border: 3px solid #00FFFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #00FFFF; font-weight: 900; user-select: none; touch-action: manipulation;">
                     →
-                </div>
-            </div>
-            
+        </div>
+    </div>
+    
         <button class="btn" onclick="showMenu()" style="position: fixed; top: 20px; right: 20px; z-index: 1001; padding: 10px 15px; font-size: 0.8rem;">🏠 MENÚ</button>
         
         <!-- BOTTOM BANNER AD - MOBILE-FIRST -->
@@ -896,50 +896,25 @@
         }
         
         function updateGame() {
-            // Update distance and speed (INFINITE ACCELERATION!)
-            gameState.distance += gameState.speed * 0.1;
+            if (!gameState.gameActive) return;
             
-            // 🚀 VELOCIDAD INFINITA - ¡HASTA LA VELOCIDAD DE LA LUZ!
-            gameState.speed += 0.008; // Aceleración constante SIN LÍMITE
+            // 🚀 USAR LÓGICA VERTICAL COMPLETAMENTE
+            updateVerticalGame();
             
             // Feedback épico cuando alcanza velocidades altas
-            if (gameState.speed > 15 && Math.floor(gameState.speed) % 5 === 0) {
+            if (gameState.speed > 8 && Math.floor(gameState.speed) % 3 === 0) {
                 showPerfectIndicator(`🚀 VELOCIDAD: ${Math.floor(gameState.speed)}! 🌌`);
                 playSound(800 + gameState.speed * 10, 100, 'sawtooth', 0.08);
             }
             
-            // Reset streak if no action for too long (makes it more challenging)
-            if (Date.now() - gameState.lastActionTime > 3000 && gameState.streak > 0) {
+            // Reset streak if no action for too long
+            if (Date.now() - gameState.lastActionTime > 4000 && gameState.streak > 0) {
                 gameState.streak = 0;
                 updateDebug('Streak reset - no action');
             }
             
-            // Spawn elements balanced for performance and action
-            const obstacleChance = gameState.adrenalineMode ? 0.010 : 0.012; // Optimizado para fluidez
-            const coinChance = gameState.adrenalineMode ? 0.018 : 0.015;
-            
-            // FAIR OBSTACLE SPAWNING (Always beatable)
-            if (gameState.obstacles.length < 2 && Math.random() < (obstacleChance * 0.7)) {
-                // Only spawn if there's safe spacing from last obstacle
-                const lastObstacle = gameState.obstacles[gameState.obstacles.length - 1];
-                if (!lastObstacle || lastObstacle.x < 500) { // MINIMUM 500px spacing
-                spawnObstacle();
-                }
-            }
-            
-            if (gameState.collectibles.length < 5 && Math.random() < coinChance) {
-                spawnCoin();
-            }
-            
-            if (gameState.collectibles.length < 6 && Math.random() < 0.003) {
-                spawnPowerUp();
-            }
-            
-            // Move elements
-            moveElements();
-            
-            // Update UI
-            updateUI();
+            // ✅ TODO EL GAMEPLAY YA ESTÁ EN updateVerticalGame() 
+            // No necesitamos spawning ni moveElements() aquí
         }
         
         function spawnObstacle() {
@@ -1089,7 +1064,7 @@
                             // Silent cleanup
                         }
                     return false;
-                    }
+                }
                     
                     // Queue DOM update
                     const rightPosition = canvasWidth - coin.x;
@@ -1147,8 +1122,8 @@
                         runnerRect.bottom < elementRect.top + 10 || 
                         runnerRect.top > elementRect.bottom - 10);
             } catch (e) {
-                return false;
-            }
+                    return false;
+                }
         }
         
         // Optimized collision detection using cached positions
@@ -1352,7 +1327,7 @@
             }
             
             try {
-                coin.element.remove();
+            coin.element.remove();
             } catch (e) {
                 // Silent cleanup
             }
@@ -1566,7 +1541,7 @@
                     console.log('Share cancelled', error);
                     copyViralMessage(); // Fallback
                 });
-            } else {
+                } else {
                 // FALLBACK: Copy to clipboard
                 copyViralMessage();
             }
@@ -1687,7 +1662,7 @@ https://neon-runner-lipastudios.netlify.app
                     gameArea.appendChild(particle);
                     
                     // Cleanup más rápido
-                    setTimeout(() => {
+                setTimeout(() => {
                         try {
                             if (particle.parentNode) particle.parentNode.removeChild(particle);
                         } catch (e) {
@@ -1919,7 +1894,7 @@ https://neon-runner-lipastudios.netlify.app
                 lane: randomLane // Store lane position for collision
             });
             
-            updateDebug(`Vertical obstacle created at lane ${randomLane}%`);
+            updateDebug(`🔴 OBSTÁCULO VERTICAL creado en carril ${randomLane}%`);
         }
         
         function createVerticalCoin() {
@@ -1946,7 +1921,7 @@ https://neon-runner-lipastudios.netlify.app
                 lane: randomLane
             });
             
-            updateDebug(`Vertical coin created at lane ${randomLane}%`);
+            updateDebug(`💰 MONEDA VERTICAL creada en carril ${randomLane}%`);
         }
         
         function updateVerticalGame() {
@@ -2007,12 +1982,12 @@ https://neon-runner-lipastudios.netlify.app
                 return true;
             });
             
-            // Spawn new elements
-            if (Math.random() < 0.02) { // 2% chance per frame
+            // Spawn new elements - MAYOR FRECUENCIA para que sea adictivo
+            if (Math.random() < 0.08) { // 8% chance per frame - MÁS OBSTÁCULOS
                 createVerticalObstacle();
             }
             
-            if (Math.random() < 0.015) { // 1.5% chance per frame
+            if (Math.random() < 0.06) { // 6% chance per frame - MÁS MONEDAS
                 createVerticalCoin();
             }
             
@@ -2077,7 +2052,7 @@ https://neon-runner-lipastudios.netlify.app
                 });
                 
                 leftControl.addEventListener('click', function(e) {
-                    e.preventDefault();
+                e.preventDefault();
                     e.stopPropagation();
                     moveHorizontal('left');
                 });
@@ -2090,7 +2065,7 @@ https://neon-runner-lipastudios.netlify.app
                     moveHorizontal('right');
                     // Visual feedback
                     this.style.background = 'rgba(0,255,255,0.6)';
-                    setTimeout(() => {
+        setTimeout(() => {
                         this.style.background = 'rgba(0,255,255,0.3)';
                     }, 150);
                 });
@@ -2103,9 +2078,22 @@ https://neon-runner-lipastudios.netlify.app
             }
         }
         
-        // Mouse controls (for desktop testing)
+        // Mouse controls (for desktop testing) - SIMPLIFICADOS
         document.addEventListener('click', function(e) {
-            handleTap();
+            // Don't interfere with control buttons
+            if (e.target.id === 'leftControl' || e.target.id === 'rightControl') return;
+            
+            // For testing - click left/right side of screen
+            if (currentScreen === 'game') {
+                const clickX = e.clientX;
+                const screenWidth = window.innerWidth;
+                
+                if (clickX < screenWidth / 2) {
+                    moveHorizontal('left');
+                } else {
+                    moveHorizontal('right');
+                }
+            }
         });
         
         // Keyboard controls (for desktop testing)
