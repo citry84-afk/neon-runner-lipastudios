@@ -614,7 +614,8 @@
             <div style="position: fixed; bottom: 80px; left: 0; width: 100%; z-index: 1000; display: flex; justify-content: center; padding: 20px;">
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #00FFFF; font-size: 0.9rem; text-align: center; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; border: 2px solid #00FFFF;">
                     <div style="margin-bottom: 5px; font-size: 1.2rem;">🚀 NEON RUNNER</div>
-                    <div style="margin-bottom: 3px;">👆 <strong>TAP PANTALLA = SALTAR</strong></div>
+                    <div style="margin-bottom: 3px;">👆 <strong>TAP = SALTAR</strong></div>
+                    <div style="margin-bottom: 3px; color: #FFFF00;">⚡ <strong>TAP MIENTRAS SALTAS = DOBLE SALTO</strong></div>
                     <div style="font-size: 0.8rem;">🛡️ Verde=Escudo 🔵 Azul=Lento 🧲 Rosa=Imán</div>
                 </div>
             </div>
@@ -902,12 +903,17 @@
             const obstacleChance = gameState.adrenalineMode ? 0.025 : 0.020; // 2x MÁS FRECUENTE
             const coinChance = gameState.adrenalineMode ? 0.030 : 0.025; // MÁS MONEDAS
             
-            // OBSTACLE SPAWNING MÁS AGRESIVO
+            // 🎮 OBSTACLE SPAWNING CON FRECUENCIA VARIABLE
             if (gameState.obstacles.length < 3 && Math.random() < obstacleChance) {
-                // Reducir espaciado mínimo para más acción
                 const lastObstacle = gameState.obstacles[gameState.obstacles.length - 1];
-                if (!lastObstacle || lastObstacle.x < 300) { // MINIMUM 300px spacing (más cerrado)
-                    spawnObstacle();
+                
+                // 🔥 ESPACIADO VARIABLE para más dinamismo
+                const minSpacing = 250 + Math.random() * 200; // Entre 250px y 450px
+                const maxSpacing = 350 + Math.random() * 300; // Entre 350px y 650px
+                const currentSpacing = Math.random() < 0.3 ? minSpacing : maxSpacing; // 30% cerrado, 70% normal
+                
+                if (!lastObstacle || lastObstacle.x < currentSpacing) {
+                spawnObstacle();
                 }
             }
             
@@ -1820,17 +1826,20 @@ https://neon-runner-lipastudios.netlify.app
                     gameState.doubleJumpAvailable = true;
                 }, 800);
                 
-                // Perfect double jump effects
+                // 🔥 FEEDBACK ÉPICO PARA DOBLE SALTO
                 const pitch = 800 + (gameState.perfectJumps * 10);
                 playSound(pitch, 120, 'square', 0.15);
                 setTimeout(() => playSound(pitch + 300, 80, 'square', 0.12), 60);
                 
+                // 💫 FEEDBACK VISUAL SIEMPRE para doble salto
+                showPerfectIndicator('⚡ DOBLE SALTO! ⚡');
+                
                 if (gameState.perfectJumps % 5 === 0) {
-                    showPerfectIndicator('PERFECT JUMP!');
+                    showPerfectIndicator('🔥 PERFECT JUMP COMBO! 🔥');
                     activateAdrenalineMode();
                 }
                 
-                updateDebug('Double Jump!');
+                updateDebug('⚡ DOBLE SALTO ACTIVADO!');
                 return;
             }
             
