@@ -362,6 +362,15 @@
             font-size: 1.5rem;
         }
         
+        .power-up.energy {
+            background: radial-gradient(circle, #FFFF00, #FFD700);
+            box-shadow: 0 0 30px #FFFF00, 0 0 50px #FFFF00;
+        }
+        .power-up.energy::before {
+            content: '⚡';
+            font-size: 1.5rem;
+        }
+        
         @keyframes powerUpPulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.3); }
@@ -460,6 +469,55 @@
             left: 0;
             background: linear-gradient(135deg, #050505 0%, #0a0a0a 50%, #1a0a1a 100%);
             z-index: 100;
+                    }
+        
+        /* FLIGHT ENERGY BAR */
+        .flight-energy-container {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00FFFF;
+            border-radius: 10px;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        
+        .flight-energy-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #FF0080, #00FFFF, #FFFF00);
+            border-radius: 8px;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 10px currentColor;
+            animation: energyPulse 1s ease-in-out infinite;
+        }
+        
+        .flight-energy-bar.low {
+            background: linear-gradient(90deg, #FF0000, #FF4500);
+            animation: energyWarning 0.3s ease-in-out infinite;
+        }
+        
+        @keyframes energyPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes energyWarning {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        .runner.flying {
+            animation: flyAnimation 0.5s ease-in-out infinite;
+            box-shadow: 0 0 30px #00FFFF, 0 0 50px #FF0080;
+        }
+        
+        @keyframes flyAnimation {
+            0%, 100% { transform: translateY(0) scale(1.1); }
+            50% { transform: translateY(-10px) scale(1.2); }
         }
     </style>
 </head>
@@ -506,11 +564,17 @@
                 <div id="runner" class="runner"></div>
             </div>
             
-            <div class="instructions">
-            <strong>CLICK</strong> para saltar • <strong>DOBLE CLICK</strong> para doble salto<br>
-            🛡️ <strong>Verde</strong> = Escudo • 🔵 <strong>Azul</strong> = Slow Motion • 🔴 <strong>Magenta</strong> = Imán monedas
+            <!-- FLIGHT ENERGY BAR -->
+            <div class="flight-energy-container" id="flightEnergyContainer">
+                <div class="flight-energy-label">🚀 ENERGÍA DE VUELO</div>
+                <div class="flight-energy-bar" id="flightEnergyBar"></div>
         </div>
         
+            <div class="instructions">
+            <strong>CLICK</strong> para saltar • <strong>MANTÉN PRESIONADO</strong> para volar<br>
+            🛡️ <strong>Verde</strong> = Escudo • 🔵 <strong>Azul</strong> = Slow Motion • 🔴 <strong>Magenta</strong> = Imán monedas
+            </div>
+            
         <button class="btn" onclick="showMenu()">🏠 MENÚ</button>
     </div>
     
@@ -528,6 +592,12 @@
             invulnerable: false,
             shieldActive: false,
             slowMotionActive: false,
+            // FLIGHT SYSTEM
+            flightEnergy: 100,
+            maxFlightEnergy: 100,
+            isFlying: false,
+            flightDrain: 25, // Energy per second
+            flightRegenRate: 10, // Energy per second when not flying
             // Sistemas adictivos
             streak: 0,
             perfectJumps: 0,
@@ -779,6 +849,9 @@
             // Move elements
             moveElements();
             
+            // Update flight system
+            updateFlightSystem();
+            
             // Update UI
             updateUI();
         }
@@ -851,7 +924,7 @@
             const gameArea = document.getElementById('game-area');
             if (!gameArea) return;
             
-            const powerUpTypes = ['shield', 'slow-motion', 'magnet'];
+            const powerUpTypes = ['shield', 'slow-motion', 'magnet', 'energy'];
             const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
             const startX = gameArea.offsetWidth;
             
@@ -1081,7 +1154,7 @@
                     noteIndex = (noteIndex + 1) % melody.length;
                     backgroundMusicInterval = setTimeout(playNextNote, currentNote.duration);
                 } catch (e) {
-                    stopBackgroundMusic();
+            stopBackgroundMusic();
                 }
             }
             
@@ -1220,6 +1293,9 @@
                 case 'magnet':
                     activateMagnet();
                     break;
+                case 'energy':
+                    restoreFlightEnergy();
+                    break;
             }
             
             updateDebug(`Power-up collected: ${powerUp.powerType}`);
@@ -1231,7 +1307,7 @@
             
             updateDebug('Shield activated! Invulnerable for 5 seconds');
             
-            setTimeout(() => {
+                setTimeout(() => {
                 gameState.shieldActive = false;
                 runner.classList.remove('shielded');
                 updateDebug('Shield deactivated');
@@ -1281,6 +1357,22 @@
                 clearInterval(magnetInterval);
                 updateDebug('Coin magnet deactivated');
             }, 6000); // 6 seconds of auto-collection
+        }
+        
+        function restoreFlightEnergy() {
+            const oldEnergy = gameState.flightEnergy;
+            gameState.flightEnergy = Math.min(gameState.flightEnergy + 50, gameState.maxFlightEnergy);
+            const restored = gameState.flightEnergy - oldEnergy;
+            
+            // Epic energy restoration effect
+            showPerfectIndicator(`⚡ +${Math.floor(restored)}% ENERGÍA! ⚡`);
+            
+            // Energy restoration sound
+            playSound(800, 200, 'triangle', 0.15);
+            setTimeout(() => playSound(1000, 150, 'triangle', 0.12), 100);
+            setTimeout(() => playSound(1200, 100, 'triangle', 0.1), 200);
+            
+            updateDebug(`Flight energy restored: +${Math.floor(restored)}%`);
         }
         
         function gameOver() {
@@ -1488,21 +1580,150 @@
             updateDebug('Jump!');
         }
         
-        // Controls
-        document.addEventListener('click', function(e) {
-            if (currentScreen === 'game') {
-                jump();
+        // FLIGHT SYSTEM FUNCTIONS
+        function startFlight() {
+            if (gameState.flightEnergy <= 0) return;
+            
+            gameState.isFlying = true;
+            const runner = document.getElementById('runner');
+            if (runner) {
+                runner.classList.add('flying');
+                // Stop any jump animations
+                runner.classList.remove('jumping', 'double-jump', 'triple-jump');
             }
+            
+            // Flight sound effect
+            playSound(400, 200, 'sawtooth', 0.1);
+            updateDebug('🚀 FLIGHT ACTIVATED!');
+        }
+        
+        function stopFlight() {
+            gameState.isFlying = false;
+            const runner = document.getElementById('runner');
+            if (runner) {
+                runner.classList.remove('flying');
+            }
+            
+            updateDebug('Flight stopped');
+        }
+        
+        function updateFlightSystem() {
+            const deltaTime = 1/60; // Assuming 60fps
+            
+            if (gameState.isFlying && gameState.flightEnergy > 0) {
+                // Drain energy while flying
+                gameState.flightEnergy -= gameState.flightDrain * deltaTime;
+                if (gameState.flightEnergy <= 0) {
+                    gameState.flightEnergy = 0;
+                    stopFlight();
+                }
+            } else if (!gameState.isFlying && gameState.flightEnergy < gameState.maxFlightEnergy) {
+                // Regenerate energy when not flying
+                gameState.flightEnergy += gameState.flightRegenRate * deltaTime;
+                if (gameState.flightEnergy > gameState.maxFlightEnergy) {
+                    gameState.flightEnergy = gameState.maxFlightEnergy;
+                }
+            }
+            
+            // Update energy bar
+            updateFlightEnergyUI();
+        }
+        
+        function updateFlightEnergyUI() {
+            const energyBar = document.getElementById('flightEnergyBar');
+            const container = document.getElementById('flightEnergyContainer');
+            
+            if (energyBar && container) {
+                const percentage = (gameState.flightEnergy / gameState.maxFlightEnergy) * 100;
+                energyBar.style.width = percentage + '%';
+                
+                // Change color when low
+                if (percentage < 25) {
+                    energyBar.classList.add('low');
+                } else {
+                    energyBar.classList.remove('low');
+                }
+                
+                // Show/hide container during game
+            if (currentScreen === 'game') {
+                    container.style.display = 'block';
+                } else {
+                    container.style.display = 'none';
+                }
+            }
+        }
+        
+        // FLIGHT CONTROLS
+        let isPressed = false;
+        let pressStartTime = 0;
+        let flightTimeout = null;
+        
+        function startPress() {
+            if (currentScreen !== 'game') return;
+            
+            isPressed = true;
+            pressStartTime = Date.now();
+            
+            // Short press = jump
+        setTimeout(() => {
+                if (isPressed && Date.now() - pressStartTime < 200) {
+                    // Still a short press, jump
+                    jump();
+                }
+            }, 50);
+            
+            // Long press = flight
+            flightTimeout = setTimeout(() => {
+                if (isPressed && gameState.flightEnergy > 0) {
+                    startFlight();
+                }
+            }, 200);
+        }
+        
+        function endPress() {
+            isPressed = false;
+            if (flightTimeout) {
+                clearTimeout(flightTimeout);
+                flightTimeout = null;
+            }
+            
+            if (gameState.isFlying) {
+                stopFlight();
+            }
+        }
+        
+        // Mouse controls
+        document.addEventListener('mousedown', startPress);
+        document.addEventListener('mouseup', endPress);
+        
+        // Touch controls  
+        document.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            startPress();
+        });
+        document.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            endPress();
         });
         
+        // Keyboard controls
         document.addEventListener('keydown', function(e) {
             if (e.code === 'Space') {
                 e.preventDefault();
-                jump();
+                if (!isPressed) {
+                    startPress();
+                }
             }
             if (e.code === 'Escape') {
                 e.preventDefault();
                 showMenu();
+            }
+        });
+        
+        document.addEventListener('keyup', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                endPress();
             }
         });
         
