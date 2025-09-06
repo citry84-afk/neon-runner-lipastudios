@@ -500,15 +500,6 @@
             50% { opacity: 1; }
         }
         
-        .runner.flying {
-            animation: flyAnimation 0.5s ease-in-out infinite;
-            box-shadow: 0 0 30px #00FFFF, 0 0 50px #FF0080;
-        }
-        
-        @keyframes flyAnimation {
-            0%, 100% { transform: translateY(0) scale(1.1); }
-            50% { transform: translateY(-10px) scale(1.2); }
-        }
     </style>
 </head>
 <body>
@@ -561,7 +552,7 @@
         </div>
         
             <div class="instructions">
-            <strong>TAP</strong> para saltar • <strong>DOBLE TAP RÁPIDO</strong> para vuelo temporal<br>
+            <strong>TAP</strong> para saltar • <strong>DOBLE TAP RÁPIDO</strong> para doble salto<br>
             🛡️ <strong>Verde</strong> = Escudo • 🔵 <strong>Azul</strong> = Slow Motion • 🔴 <strong>Magenta</strong> = Imán monedas
             </div>
             
@@ -573,7 +564,7 @@
         let gameState = {
             distance: 0,
             coins: 0,
-            speed: 5.0,
+            speed: 3.0, // Start slower
             gameActive: false,
             obstacles: [],
             collectibles: [],
@@ -582,9 +573,7 @@
             invulnerable: false,
             shieldActive: false,
             slowMotionActive: false,
-            // SIMPLE FLIGHT SYSTEM (MOBILE-FIRST)
-            isFlying: false,
-            canFly: true,
+            // SIMPLE CONTROLS (NO FLIGHT)
             lastTapTime: 0,
             // Sistemas adictivos
             streak: 0,
@@ -807,9 +796,12 @@
         }
         
         function updateGame() {
-            // Update distance and speed
+            // Update distance and speed (PROGRESSIVE & BALANCED)
             gameState.distance += gameState.speed * 0.1;
-            gameState.speed = 5.0 + (gameState.distance / 500) * 0.5;
+            
+            // SMOOTH PROGRESSIVE SPEED INCREASE
+            const targetSpeed = Math.min(3.0 + (gameState.distance / 200), 7.0); // Max speed 7.0
+            gameState.speed = targetSpeed;
             
             // Reset streak if no action for too long (makes it more challenging)
             if (Date.now() - gameState.lastActionTime > 3000 && gameState.streak > 0) {
@@ -821,9 +813,13 @@
             const obstacleChance = gameState.adrenalineMode ? 0.010 : 0.012; // Optimizado para fluidez
             const coinChance = gameState.adrenalineMode ? 0.018 : 0.015;
             
-            // Limit total elements for performance
-            if (gameState.obstacles.length < 3 && Math.random() < obstacleChance) {
+            // FAIR OBSTACLE SPAWNING (Always beatable)
+            if (gameState.obstacles.length < 2 && Math.random() < (obstacleChance * 0.7)) {
+                // Only spawn if there's safe spacing from last obstacle
+                const lastObstacle = gameState.obstacles[gameState.obstacles.length - 1];
+                if (!lastObstacle || lastObstacle.x < 500) { // MINIMUM 500px spacing
                 spawnObstacle();
+                }
             }
             
             if (gameState.collectibles.length < 5 && Math.random() < coinChance) {
@@ -1550,7 +1546,7 @@
             if (runner.classList.contains('jumping') || runner.classList.contains('double-jump')) return;
             
             runner.classList.add('jumping');
-            setTimeout(() => {
+        setTimeout(() => {
                 runner.classList.remove('jumping');
                 gameState.doubleJumpAvailable = true;
             }, 600);
@@ -1562,45 +1558,6 @@
             updateDebug('Jump!');
         }
         
-        // SIMPLE TEMPORARY FLIGHT (MOBILE-FIRST)
-        function activateTemporaryFlight() {
-            if (!gameState.canFly) return;
-            
-            gameState.isFlying = true;
-            gameState.canFly = false; // Cooldown
-            
-            const runner = document.getElementById('runner');
-            if (runner) {
-                runner.classList.add('flying');
-                runner.classList.remove('jumping', 'double-jump', 'triple-jump');
-            }
-            
-            // Epic flight sound
-            playSound(400, 200, 'sawtooth', 0.15);
-            showPerfectIndicator('🚀 VUELO ACTIVADO! 🚀');
-            updateDebug('🚀 TEMPORARY FLIGHT!');
-            
-            // Auto-stop flight after 2 seconds
-            setTimeout(() => {
-                stopTemporaryFlight();
-            }, 2000);
-            
-            // Cooldown: can fly again after 4 seconds
-            setTimeout(() => {
-                gameState.canFly = true;
-                showPerfectIndicator('✈️ Vuelo recargado');
-                playSound(600, 100, 'triangle', 0.1);
-            }, 4000);
-        }
-        
-        function stopTemporaryFlight() {
-            gameState.isFlying = false;
-            const runner = document.getElementById('runner');
-            if (runner) {
-                runner.classList.remove('flying');
-            }
-            updateDebug('Flight ended');
-        }
         
         // ULTRA-SIMPLE MOBILE CONTROLS
         function handleTap() {
@@ -1609,9 +1566,11 @@
             const now = Date.now();
             const timeSinceLastTap = now - gameState.lastTapTime;
             
-            // DOBLE TAP RÁPIDO = VUELO TEMPORAL (300ms window)
-            if (timeSinceLastTap < 300 && gameState.canFly) {
-                activateTemporaryFlight();
+            // DOBLE TAP RÁPIDO = DOBLE SALTO (300ms window)
+            if (timeSinceLastTap < 300 && gameState.doubleJumpAvailable) {
+                // Force double jump
+                gameState.doubleJumpAvailable = false;
+                jump();
             } else {
                 // TAP NORMAL = SALTO
                 jump();
