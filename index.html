@@ -898,24 +898,24 @@
                 updateDebug('Streak reset - no action');
             }
             
-            // Spawn elements balanced for performance and action
-            const obstacleChance = gameState.adrenalineMode ? 0.010 : 0.012;
-            const coinChance = gameState.adrenalineMode ? 0.018 : 0.015;
+            // 🔥 SPAWN OPTIMIZADO PARA MÁXIMA ADICCIÓN
+            const obstacleChance = gameState.adrenalineMode ? 0.025 : 0.020; // 2x MÁS FRECUENTE
+            const coinChance = gameState.adrenalineMode ? 0.030 : 0.025; // MÁS MONEDAS
             
-            // FAIR OBSTACLE SPAWNING (Always beatable)
-            if (gameState.obstacles.length < 2 && Math.random() < (obstacleChance * 0.7)) {
-                // Only spawn if there's safe spacing from last obstacle
+            // OBSTACLE SPAWNING MÁS AGRESIVO
+            if (gameState.obstacles.length < 3 && Math.random() < obstacleChance) {
+                // Reducir espaciado mínimo para más acción
                 const lastObstacle = gameState.obstacles[gameState.obstacles.length - 1];
-                if (!lastObstacle || lastObstacle.x < 500) { // MINIMUM 500px spacing
-                spawnObstacle();
+                if (!lastObstacle || lastObstacle.x < 300) { // MINIMUM 300px spacing (más cerrado)
+                    spawnObstacle();
                 }
             }
             
-            if (gameState.collectibles.length < 5 && Math.random() < coinChance) {
+            if (gameState.collectibles.length < 6 && Math.random() < coinChance) {
                 spawnCoin();
             }
             
-            if (gameState.collectibles.length < 6 && Math.random() < 0.003) {
+            if (gameState.collectibles.length < 8 && Math.random() < 0.008) { // MÁS POWER-UPS
                 spawnPowerUp();
             }
             
@@ -1023,9 +1023,7 @@
                 const runner = document.getElementById('runner');
                 const speed = gameState.speed;
                 
-                // Batch DOM updates for better performance
-                const obstacleUpdates = [];
-                const collectibleUpdates = [];
+                // 🚀 OPTIMIZACIÓN DIRECTA PARA MÁXIMA FLUIDEZ
                 
                 // Process obstacles - HORIZONTAL MOVEMENT (obstacles move LEFT)
                 let obstacleCollision = false;
@@ -1041,9 +1039,10 @@
                     return false;
                 }
                     
-                    // Queue DOM update
-                    const rightPosition = canvasWidth - obstacle.x;
-                    obstacleUpdates.push({element: obstacle.element, position: rightPosition});
+                    // 🚀 OPTIMIZACIÓN DE FLUIDEZ - Actualización directa más rápida
+                    if (obstacle.element && obstacle.element.parentNode) {
+                        obstacle.element.style.right = (canvasWidth - obstacle.x) + 'px';
+                    }
                     
                     // Simplified collision detection
                     if (!obstacleCollision && !gameState.shieldActive && 
@@ -1071,9 +1070,10 @@
                     return false;
                 }
                     
-                    // Queue DOM update
-                    const rightPosition = canvasWidth - coin.x;
-                    collectibleUpdates.push({element: coin.element, position: rightPosition});
+                    // 🚀 OPTIMIZACIÓN DE FLUIDEZ - Actualización directa
+                    if (coin.element && coin.element.parentNode) {
+                        coin.element.style.right = (canvasWidth - coin.x) + 'px';
+                    }
                     
                     // Simplified collection detection
                     if (coin.x > 80 && coin.x < 160) {
@@ -1091,22 +1091,7 @@
                 return true;
             });
             
-                // Apply all DOM updates at once
-                obstacleUpdates.forEach(update => {
-                    try {
-                        update.element.style.right = update.position + 'px';
-                    } catch (e) {
-                        // Silent error handling
-                    }
-                });
-                
-                collectibleUpdates.forEach(update => {
-                    try {
-                        update.element.style.right = update.position + 'px';
-                    } catch (e) {
-                        // Silent error handling
-                    }
-                });
+                // 🚀 FLUIDEZ OPTIMIZADA - Sin batching, actualizaciones directas más rápidas
                 
             } catch (e) {
                 updateDebug('Move elements error: ' + e.message);
