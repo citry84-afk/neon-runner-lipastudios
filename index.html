@@ -618,7 +618,7 @@
                     <div style="font-size: 0.8rem;">🛡️ Verde=Escudo 🔵 Azul=Lento 🧲 Rosa=Imán</div>
                 </div>
             </div>
-    
+            
         <button class="btn" onclick="showMenu()" style="position: fixed; top: 20px; right: 20px; z-index: 1001; padding: 10px 15px; font-size: 0.8rem;">🏠 MENÚ</button>
         
         <!-- BOTTOM BANNER AD - MOBILE-FIRST -->
@@ -907,7 +907,7 @@
                 // Only spawn if there's safe spacing from last obstacle
                 const lastObstacle = gameState.obstacles[gameState.obstacles.length - 1];
                 if (!lastObstacle || lastObstacle.x < 500) { // MINIMUM 500px spacing
-                    spawnObstacle();
+                spawnObstacle();
                 }
             }
             
@@ -1027,12 +1027,12 @@
                 const obstacleUpdates = [];
                 const collectibleUpdates = [];
                 
-                // Process obstacles - VERTICAL MOVEMENT (obstacles move DOWN)
+                // Process obstacles - HORIZONTAL MOVEMENT (obstacles move LEFT)
                 let obstacleCollision = false;
             gameState.obstacles = gameState.obstacles.filter(obstacle => {
-                    obstacle.y += speed; // Move DOWN instead of left
+                    obstacle.x -= speed; // Move LEFT (horizontal gameplay)
                 
-                    if (obstacle.y > window.innerHeight + 100) {
+                    if (obstacle.x < -100) {
                         try {
                     obstacle.element.remove();
                         } catch (e) {
@@ -2041,7 +2041,7 @@ https://neon-runner-lipastudios.netlify.app
 
         // SIMPLE TOUCH CONTROLS - TAP ANYWHERE = JUMP
         document.addEventListener('touchstart', function(e) {
-            e.preventDefault();
+                e.preventDefault();
             if (currentScreen === 'game') {
                 jump();
             }
