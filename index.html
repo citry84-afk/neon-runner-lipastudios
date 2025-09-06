@@ -894,21 +894,19 @@
                 updateDebug('Streak reset - no action');
             }
             
-            // 🔥 SPAWN OPTIMIZADO PARA MÁXIMA ADICCIÓN
-            const obstacleChance = gameState.adrenalineMode ? 0.025 : 0.020; // 2x MÁS FRECUENTE
-            const coinChance = gameState.adrenalineMode ? 0.030 : 0.025; // MÁS MONEDAS
+            // 🎮 SPAWN BALANCEADO Y JUGABLE
+            const obstacleChance = gameState.adrenalineMode ? 0.008 : 0.006; // MUCHO MÁS SUAVE
+            const coinChance = gameState.adrenalineMode ? 0.015 : 0.012; // Monedas normales
             
-            // 🎮 OBSTACLE SPAWNING CON FRECUENCIA VARIABLE
-            if (gameState.obstacles.length < 3 && Math.random() < obstacleChance) {
+            // 🎮 OBSTACLE SPAWNING SIMPLE Y PREDECIBLE
+            if (gameState.obstacles.length < 2 && Math.random() < obstacleChance) {
                 const lastObstacle = gameState.obstacles[gameState.obstacles.length - 1];
                 
-                // 🔥 ESPACIADO VARIABLE para más dinamismo
-                const minSpacing = 250 + Math.random() * 200; // Entre 250px y 450px
-                const maxSpacing = 350 + Math.random() * 300; // Entre 350px y 650px
-                const currentSpacing = Math.random() < 0.3 ? minSpacing : maxSpacing; // 30% cerrado, 70% normal
+                // 📏 ESPACIADO FIJO Y SEGURO - Siempre superable
+                const spacing = 400 + Math.random() * 200; // Entre 400px y 600px - MUY SEGURO
                 
-                if (!lastObstacle || lastObstacle.x < currentSpacing) {
-                spawnObstacle();
+                if (!lastObstacle || lastObstacle.x < spacing) {
+                    spawnObstacle();
                 }
             }
             
@@ -2032,42 +2030,29 @@ https://neon-runner-lipastudios.netlify.app
             return false;
         }
 
-        // 🚀 DOBLE TAP SYSTEM - TAP = SALTAR, DOBLE TAP = DOBLE SALTO
+        // 🚀 CONTROLES SIMPLES SIN DELAY - TAP = SALTAR, DOBLE TAP = DOBLE SALTO
         let lastTapTime = 0;
-        let tapCount = 0;
         
         document.addEventListener('touchstart', function(e) {
-                e.preventDefault();
+            e.preventDefault();
             if (currentScreen !== 'game') return;
             
             const currentTime = Date.now();
             const timeDiff = currentTime - lastTapTime;
             
-            if (timeDiff < 300) { // 300ms window for double tap
-                tapCount++;
-                if (tapCount === 2) {
-                    // DOBLE TAP = DOBLE SALTO INMEDIATO
-                    doubleTapJump();
-                    tapCount = 0;
-                    return;
-                }
+            if (timeDiff < 250) { // 250ms window for double tap
+                // DOBLE TAP = DOBLE SALTO INMEDIATO
+                doubleTapJump();
             } else {
-                tapCount = 1;
-                // Single tap after delay
-        setTimeout(() => {
-                    if (tapCount === 1) {
-                        jump(); // Single tap = normal jump
-                    }
-                    tapCount = 0;
-                }, 300);
+                // TAP INMEDIATO = SALTO INMEDIATO (sin delay)
+                jump();
             }
             
             lastTapTime = currentTime;
         });
         
-        // Mouse controls (for desktop testing) - DOBLE CLICK = DOBLE SALTO
+        // Mouse controls (for desktop testing) - SIMPLE Y SIN DELAY
         let lastClickTime = 0;
-        let clickCount = 0;
         
         document.addEventListener('click', function(e) {
             // Don't interfere with control buttons
@@ -2077,23 +2062,10 @@ https://neon-runner-lipastudios.netlify.app
             const currentTime = Date.now();
             const timeDiff = currentTime - lastClickTime;
             
-            if (timeDiff < 300) { // 300ms window for double click
-                clickCount++;
-                if (clickCount === 2) {
-                    // DOBLE CLICK = DOBLE SALTO
-                    doubleTapJump();
-                    clickCount = 0;
-                    return;
-                }
+            if (timeDiff < 250) { // Double click
+                doubleTapJump();
             } else {
-                clickCount = 1;
-                // Single click after delay
-                setTimeout(() => {
-                    if (clickCount === 1) {
-                        jump(); // Single click = normal jump
-                    }
-                    clickCount = 0;
-                }, 300);
+                jump(); // Single click - INMEDIATO
             }
             
             lastClickTime = currentTime;
