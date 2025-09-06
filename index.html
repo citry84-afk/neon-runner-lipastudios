@@ -1448,12 +1448,10 @@
                         <div style="margin-bottom: 20px; color: #FFFF00; font-weight: bold;">
                             ¡COMPARTE TU SCORE! 🔥
                         </div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;">
-                            <button onclick="shareToTikTok('${shareText}', '${gameUrl}')" style="background: #000; color: white; border: 2px solid #FF0050; padding: 8px 12px; border-radius: 8px; cursor: pointer;">📱 TikTok</button>
-                            <button onclick="shareToWhatsApp('${shareText}', '${gameUrl}')" style="background: #25D366; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">💬 WhatsApp</button>
-                            <button onclick="shareToTwitter('${shareText}', '${gameUrl}', '${hashtags}')" style="background: #1DA1F2; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">🐦 Twitter</button>
-                            <button onclick="shareToInstagram('${shareText}')" style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">📸 Instagram</button>
-                            <button onclick="copyShareLink('${gameUrl}', '${shareText}')" style="background: #333; color: white; border: 2px solid #00FFFF; padding: 8px 12px; border-radius: 8px; cursor: pointer;">📋 Copiar</button>
+                        <div style="display: flex; flex-direction: column; gap: 15px; justify-content: center; margin-bottom: 20px;">
+                            <button onclick="shareNative()" style="background: linear-gradient(45deg, #FF0080, #00FFFF); color: white; border: none; padding: 15px 25px; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: bold; box-shadow: 0 0 20px rgba(255,0,128,0.5);">📱 COMPARTIR (Elige tu app)</button>
+                            <button onclick="copyViralMessage()" style="background: linear-gradient(45deg, #00FFFF, #FFFF00); color: #000; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: bold;">📋 COPIAR MENSAJE VIRAL</button>
+                            <button onclick="generateShareImage()" style="background: linear-gradient(45deg, #FF0080, #FF8C00); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: bold;">📸 GENERAR IMAGEN</button>
                         </div>
                         <div style="display: flex; gap: 10px; justify-content: center;">
                             <button onclick="closeShareModal(); startGame();" style="background: #FF0080; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">🔄 JUGAR DE NUEVO</button>
@@ -1479,42 +1477,125 @@
             if (modal) modal.remove();
         }
         
-        // SHARING FUNCTIONS
-        function shareToTikTok(text, url) {
-            // TikTok doesn't have direct web sharing, open app or web
-            const tikTokText = encodeURIComponent(text + ' ' + url);
-            window.open(`https://www.tiktok.com/upload?caption=${tikTokText}`, '_blank');
-            window.trackEvent('share_attempt', { platform: 'tiktok', score: Math.floor(gameState.distance) });
+        // 🚀 NUEVA SHARING FUNCTIONS - ULTRA EFECTIVAS
+        function shareNative() {
+            const distance = Math.floor(gameState.distance);
+            const coins = gameState.coins;
+            const speed = Math.floor(gameState.speed);
+            
+            const shareData = {
+                title: '🚀 Neon Runner - ¡Mira mi score épico!',
+                text: `🚀 ¡Acabo de conseguir ${distance}m en Neon Runner! ⚡ Velocidad máxima: ${speed} 💰 Monedas: ${coins} 🎮 ¿Puedes superarme?`,
+                url: 'https://neon-runner-lipastudios.netlify.app'
+            };
+
+            if (navigator.share) {
+                // WEB SHARE API NATIVO - FUNCIONA CON TODAS LAS APPS
+                navigator.share(shareData).then(() => {
+                    window.trackEvent('native_share_success', { 
+                        score: distance, 
+                        method: 'web_share_api' 
+                    });
+                    alert('🎉 ¡Compartido exitosamente! Gracias por ayudar a que el juego se vuelva viral 🔥');
+                }).catch((error) => {
+                    console.log('Share cancelled', error);
+                    copyViralMessage(); // Fallback
+                });
+            } else {
+                // FALLBACK: Copy to clipboard
+                copyViralMessage();
+            }
         }
         
-        function shareToWhatsApp(text, url) {
-            const whatsappText = encodeURIComponent(text + '\n\n🎮 Juega aquí: ' + url);
-            window.open(`https://wa.me/?text=${whatsappText}`, '_blank');
-            window.trackEvent('share_attempt', { platform: 'whatsapp', score: Math.floor(gameState.distance) });
-        }
-        
-        function shareToTwitter(text, url, hashtags) {
-            const twitterText = encodeURIComponent(text);
-            const twitterUrl = encodeURIComponent(url);
-            const twitterHashtags = encodeURIComponent(hashtags);
-            window.open(`https://twitter.com/intent/tweet?text=${twitterText}&url=${twitterUrl}&hashtags=${twitterHashtags}`, '_blank');
-            window.trackEvent('share_attempt', { platform: 'twitter', score: Math.floor(gameState.distance) });
-        }
-        
-        function shareToInstagram(text) {
-            // Instagram doesn't support direct text sharing, copy to clipboard
-            navigator.clipboard.writeText(text + '\n\n🎮 Neon Runner - Ultra Addictive Game!').then(() => {
-                alert('📋 Texto copiado! Pégalo en tu Instagram Story 📸');
+        function copyViralMessage() {
+            const distance = Math.floor(gameState.distance);
+            const coins = gameState.coins;
+            const speed = Math.floor(gameState.speed);
+            
+            const viralMessage = `🚀 ¡NUEVO RÉCORD EN NEON RUNNER! 🚀
+
+🎯 Mi score: ${distance} metros
+⚡ Velocidad alcanzada: ${speed}
+💰 Monedas conseguidas: ${coins}
+
+🎮 ¿PUEDES SUPERARME?
+Juega GRATIS aquí 👇
+https://neon-runner-lipastudios.netlify.app
+
+#NeonRunner #Gaming #Challenge #Adictivo`;
+
+            navigator.clipboard.writeText(viralMessage).then(() => {
+                alert('📋 ¡MENSAJE VIRAL COPIADO! 🔥\n\nAhora pégalo en WhatsApp, Instagram, TikTok o donde quieras.\n\n¡Vamos a hacer este juego VIRAL! 🚀');
+                window.trackEvent('viral_message_copied', { 
+                    score: distance,
+                    method: 'clipboard_copy'
+                });
+            }).catch(() => {
+                // Show the message in a prompt as fallback
+                prompt('📋 Copia este mensaje viral:', viralMessage);
             });
-            window.trackEvent('share_attempt', { platform: 'instagram', score: Math.floor(gameState.distance) });
         }
         
-        function copyShareLink(url, text) {
-            const fullText = text + '\n\n🎮 Juega aquí: ' + url;
-            navigator.clipboard.writeText(fullText).then(() => {
-                alert('📋 ¡Link copiado! Compártelo donde quieras 🚀');
+        function generateShareImage() {
+            // Create a canvas with the game score
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 400;
+            canvas.height = 600;
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, 600);
+            gradient.addColorStop(0, '#1a1a2e');
+            gradient.addColorStop(1, '#16213e');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 400, 600);
+            
+            // Add neon border
+            ctx.strokeStyle = '#00FFFF';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(10, 10, 380, 580);
+            
+            // Title
+            ctx.fillStyle = '#FF0080';
+            ctx.font = 'bold 32px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🚀 NEON RUNNER', 200, 80);
+            
+            // Score
+            ctx.fillStyle = '#00FFFF';
+            ctx.font = 'bold 48px Arial';
+            ctx.fillText(`${Math.floor(gameState.distance)}m`, 200, 180);
+            
+            ctx.fillStyle = '#FFFF00';
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText(`Velocidad: ${Math.floor(gameState.speed)}`, 200, 240);
+            ctx.fillText(`Monedas: ${gameState.coins}`, 200, 280);
+            
+            // Challenge text
+            ctx.fillStyle = '#FF0080';
+            ctx.font = 'bold 28px Arial';
+            ctx.fillText('¿PUEDES SUPERARME?', 200, 380);
+            
+            // URL
+            ctx.fillStyle = '#00FFFF';
+            ctx.font = '18px Arial';
+            ctx.fillText('neon-runner-lipastudios.netlify.app', 200, 450);
+            
+            // Convert to image and trigger download
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `neon-runner-score-${Math.floor(gameState.distance)}m.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                alert('📸 ¡Imagen generada! Se ha descargado a tu móvil. ¡Compártela en Instagram Stories! 🔥');
+                window.trackEvent('share_image_generated', { 
+                    score: Math.floor(gameState.distance),
+                    method: 'canvas_download'
+                });
             });
-            window.trackEvent('share_attempt', { platform: 'copy_link', score: Math.floor(gameState.distance) });
         }
         
         // FUNCIONES DE EFECTOS ÉPICOS OPTIMIZADAS
