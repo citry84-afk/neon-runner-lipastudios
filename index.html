@@ -552,7 +552,7 @@
         </div>
         
             <div class="instructions">
-            <strong>TAP</strong> para saltar • <strong>DOBLE TAP RÁPIDO</strong> para doble salto<br>
+            <strong>TAP</strong> para saltar • <strong>TAP mientras saltas</strong> para doble salto<br>
             🛡️ <strong>Verde</strong> = Escudo • 🔵 <strong>Azul</strong> = Slow Motion • 🔴 <strong>Magenta</strong> = Imán monedas
             </div>
             
@@ -573,8 +573,6 @@
             invulnerable: false,
             shieldActive: false,
             slowMotionActive: false,
-            // SIMPLE CONTROLS (NO FLIGHT)
-            lastTapTime: 0,
             // Sistemas adictivos
             streak: 0,
             perfectJumps: 0,
@@ -995,11 +993,12 @@
                         if (checkSimpleCollision(runner, coin.element)) {
                             if (coin.type === 'coin') {
                                 collectCoin(coin);
+                                return false; // Remove collected coin
                             } else if (coin.type === 'power-up') {
                                 collectPowerUp(coin);
+                                return false; // Remove collected power-up
                             }
-                    return false;
-                }
+                        }
                     }
                     
                 return true;
@@ -1563,20 +1562,8 @@
         function handleTap() {
             if (currentScreen !== 'game') return;
             
-            const now = Date.now();
-            const timeSinceLastTap = now - gameState.lastTapTime;
-            
-            // DOBLE TAP RÁPIDO = DOBLE SALTO (300ms window)
-            if (timeSinceLastTap < 300 && gameState.doubleJumpAvailable) {
-                // Force double jump
-                gameState.doubleJumpAvailable = false;
-                jump();
-            } else {
-                // TAP NORMAL = SALTO
-                jump();
-            }
-            
-            gameState.lastTapTime = now;
+            // SIMPLE: Every tap is just a jump (handles double jump automatically)
+            jump();
         }
         
         // Touch controls (MAIN for mobile)
