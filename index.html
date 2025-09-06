@@ -471,19 +471,9 @@
             z-index: 100;
                     }
         
-        /* FLIGHT ENERGY BAR */
+        /* SIMPLE FLIGHT INDICATOR (MOBILE-FIRST) */
         .flight-energy-container {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #00FFFF;
-            border-radius: 10px;
-            z-index: 1000;
-            overflow: hidden;
+            display: none; /* Hidden for mobile simplicity */
         }
         
         .flight-energy-bar {
@@ -571,7 +561,7 @@
         </div>
         
             <div class="instructions">
-            <strong>CLICK</strong> para saltar • <strong>MANTÉN PRESIONADO</strong> para volar<br>
+            <strong>TAP</strong> para saltar • <strong>DOBLE TAP RÁPIDO</strong> para vuelo temporal<br>
             🛡️ <strong>Verde</strong> = Escudo • 🔵 <strong>Azul</strong> = Slow Motion • 🔴 <strong>Magenta</strong> = Imán monedas
             </div>
             
@@ -592,12 +582,10 @@
             invulnerable: false,
             shieldActive: false,
             slowMotionActive: false,
-            // FLIGHT SYSTEM
-            flightEnergy: 100,
-            maxFlightEnergy: 100,
+            // SIMPLE FLIGHT SYSTEM (MOBILE-FIRST)
             isFlying: false,
-            flightDrain: 25, // Energy per second
-            flightRegenRate: 10, // Energy per second when not flying
+            canFly: true,
+            lastTapTime: 0
             // Sistemas adictivos
             streak: 0,
             perfectJumps: 0,
@@ -849,9 +837,6 @@
             // Move elements
             moveElements();
             
-            // Update flight system
-            updateFlightSystem();
-            
             // Update UI
             updateUI();
         }
@@ -924,7 +909,7 @@
             const gameArea = document.getElementById('game-area');
             if (!gameArea) return;
             
-            const powerUpTypes = ['shield', 'slow-motion', 'magnet', 'energy'];
+            const powerUpTypes = ['shield', 'slow-motion', 'magnet'];
             const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
             const startX = gameArea.offsetWidth;
             
@@ -1293,9 +1278,6 @@
                 case 'magnet':
                     activateMagnet();
                     break;
-                case 'energy':
-                    restoreFlightEnergy();
-                    break;
             }
             
             updateDebug(`Power-up collected: ${powerUp.powerType}`);
@@ -1580,150 +1562,84 @@
             updateDebug('Jump!');
         }
         
-        // FLIGHT SYSTEM FUNCTIONS
-        function startFlight() {
-            if (gameState.flightEnergy <= 0) return;
+        // SIMPLE TEMPORARY FLIGHT (MOBILE-FIRST)
+        function activateTemporaryFlight() {
+            if (!gameState.canFly) return;
             
             gameState.isFlying = true;
+            gameState.canFly = false; // Cooldown
+            
             const runner = document.getElementById('runner');
             if (runner) {
                 runner.classList.add('flying');
-                // Stop any jump animations
                 runner.classList.remove('jumping', 'double-jump', 'triple-jump');
             }
             
-            // Flight sound effect
-            playSound(400, 200, 'sawtooth', 0.1);
-            updateDebug('🚀 FLIGHT ACTIVATED!');
+            // Epic flight sound
+            playSound(400, 200, 'sawtooth', 0.15);
+            showPerfectIndicator('🚀 VUELO ACTIVADO! 🚀');
+            updateDebug('🚀 TEMPORARY FLIGHT!');
+            
+            // Auto-stop flight after 2 seconds
+            setTimeout(() => {
+                stopTemporaryFlight();
+            }, 2000);
+            
+            // Cooldown: can fly again after 4 seconds
+            setTimeout(() => {
+                gameState.canFly = true;
+                showPerfectIndicator('✈️ Vuelo recargado');
+                playSound(600, 100, 'triangle', 0.1);
+            }, 4000);
         }
         
-        function stopFlight() {
+        function stopTemporaryFlight() {
             gameState.isFlying = false;
             const runner = document.getElementById('runner');
             if (runner) {
                 runner.classList.remove('flying');
             }
-            
-            updateDebug('Flight stopped');
+            updateDebug('Flight ended');
         }
         
-        function updateFlightSystem() {
-            const deltaTime = 1/60; // Assuming 60fps
-            
-            if (gameState.isFlying && gameState.flightEnergy > 0) {
-                // Drain energy while flying
-                gameState.flightEnergy -= gameState.flightDrain * deltaTime;
-                if (gameState.flightEnergy <= 0) {
-                    gameState.flightEnergy = 0;
-                    stopFlight();
-                }
-            } else if (!gameState.isFlying && gameState.flightEnergy < gameState.maxFlightEnergy) {
-                // Regenerate energy when not flying
-                gameState.flightEnergy += gameState.flightRegenRate * deltaTime;
-                if (gameState.flightEnergy > gameState.maxFlightEnergy) {
-                    gameState.flightEnergy = gameState.maxFlightEnergy;
-                }
-            }
-            
-            // Update energy bar
-            updateFlightEnergyUI();
-        }
-        
-        function updateFlightEnergyUI() {
-            const energyBar = document.getElementById('flightEnergyBar');
-            const container = document.getElementById('flightEnergyContainer');
-            
-            if (energyBar && container) {
-                const percentage = (gameState.flightEnergy / gameState.maxFlightEnergy) * 100;
-                energyBar.style.width = percentage + '%';
-                
-                // Change color when low
-                if (percentage < 25) {
-                    energyBar.classList.add('low');
-                } else {
-                    energyBar.classList.remove('low');
-                }
-                
-                // Show/hide container during game
-            if (currentScreen === 'game') {
-                    container.style.display = 'block';
-                } else {
-                    container.style.display = 'none';
-                }
-            }
-        }
-        
-        // FLIGHT CONTROLS
-        let isPressed = false;
-        let pressStartTime = 0;
-        let flightTimeout = null;
-        
-        function startPress() {
+        // ULTRA-SIMPLE MOBILE CONTROLS
+        function handleTap() {
             if (currentScreen !== 'game') return;
             
-            isPressed = true;
-            pressStartTime = Date.now();
+            const now = Date.now();
+            const timeSinceLastTap = now - gameState.lastTapTime;
             
-            // Short press = jump
-        setTimeout(() => {
-                if (isPressed && Date.now() - pressStartTime < 200) {
-                    // Still a short press, jump
-                    jump();
-                }
-            }, 50);
-            
-            // Long press = flight
-            flightTimeout = setTimeout(() => {
-                if (isPressed && gameState.flightEnergy > 0) {
-                    startFlight();
-                }
-            }, 200);
-        }
-        
-        function endPress() {
-            isPressed = false;
-            if (flightTimeout) {
-                clearTimeout(flightTimeout);
-                flightTimeout = null;
+            // DOBLE TAP RÁPIDO = VUELO TEMPORAL (300ms window)
+            if (timeSinceLastTap < 300 && gameState.canFly) {
+                activateTemporaryFlight();
+            } else {
+                // TAP NORMAL = SALTO
+                jump();
             }
             
-            if (gameState.isFlying) {
-                stopFlight();
-            }
+            gameState.lastTapTime = now;
         }
         
-        // Mouse controls
-        document.addEventListener('mousedown', startPress);
-        document.addEventListener('mouseup', endPress);
-        
-        // Touch controls  
+        // Touch controls (MAIN for mobile)
         document.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            startPress();
+            handleTap();
         });
-        document.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            endPress();
+        
+        // Mouse controls (for desktop testing)
+        document.addEventListener('click', function(e) {
+            handleTap();
         });
         
         // Keyboard controls
         document.addEventListener('keydown', function(e) {
             if (e.code === 'Space') {
                 e.preventDefault();
-                if (!isPressed) {
-                    startPress();
-                }
+                handleTap();
             }
             if (e.code === 'Escape') {
                 e.preventDefault();
                 showMenu();
-            }
-        });
-        
-        document.addEventListener('keyup', function(e) {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                endPress();
             }
         });
         
