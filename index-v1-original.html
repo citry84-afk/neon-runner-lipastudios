@@ -547,170 +547,7 @@
             50% { opacity: 1; }
         }
         
-
-    /* ========================================
-    /* ESTILOS PARA POWER-UPS Y LOGROS DEL RUNNER
-    /* ========================================
-
-    .runner-powerup-modal, .runner-achievements-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.9);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-
-    .runner-powerup-modal.show, .runner-achievements-modal.show {
-        opacity: 1;
-    }
-
-    .runner-powerup-content, .runner-achievements-content {
-        background: linear-gradient(135deg, #FF0080, #00FFFF);
-        padding: 2rem;
-        border-radius: 20px;
-        text-align: center;
-        color: white;
-        max-width: 700px;
-        width: 90%;
-        max-height: 80vh;
-        overflow-y: auto;
-        position: relative;
-    }
-
-    .runner-powerup-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
-        margin: 1.5rem 0;
-    }
-
-    .runner-powerup-item {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 1.5rem;
-        border-radius: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s;
-    }
-
-    .runner-powerup-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-
-    .runner-powerup-item h4 {
-        margin: 0 0 0.5rem 0;
-        font-size: 1.2rem;
-        color: #00FFFF;
-    }
-
-    .runner-powerup-item p {
-        margin: 0 0 1rem 0;
-        opacity: 0.8;
-        font-size: 0.9rem;
-    }
-
-    .runner-powerup-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .cost {
-        font-weight: bold;
-        color: #FFD700;
-        font-size: 1.1rem;
-    }
-
-    .btn.reward {
-        background: linear-gradient(135deg, #FF6B6B, #EE5A24);
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: all 0.3s;
-    }
-
-    .btn.reward:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
-    }
-
-    .runner-achievements-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
-        margin: 1.5rem 0;
-    }
-
-    .runner-achievement-item {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 1rem;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s;
-    }
-
-    .runner-achievement-item:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    }
-
-    .runner-achievement-item.unlocked {
-        background: rgba(255, 215, 0, 0.2);
-        border-color: #FFD700;
-    }
-
-    .runner-achievement-item.locked {
-        opacity: 0.5;
-    }
-
-    .runner-achievement-icon {
-        font-size: 2rem;
-    }
-
-    .runner-achievement-info h4 {
-        margin: 0 0 0.25rem 0;
-        font-size: 1rem;
-        color: #00FFFF;
-    }
-
-    .runner-achievement-info p {
-        margin: 0 0 0.5rem 0;
-        font-size: 0.8rem;
-        opacity: 0.8;
-    }
-
-    .runner-achievement-info .reward {
-        font-size: 0.9rem;
-        color: #FFD700;
-        font-weight: bold;
-    }
-
-    .close-btn {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.5rem;
-        cursor: pointer;
-    }
     </style>
-    <!-- OPTIMIZACIONES VIRAL + RETENCIÓN + MONETIZACIÓN PARA SOCIAL MEDIA -->
-    <script src="neon-runner-optimizations.js"></script>
 </head>
 <body>
     <div class="debug" id="debug">
@@ -1041,7 +878,7 @@
             
             // Ultra-smooth distance progression
             gameState.distance += gameState.speed * 0.1;
-            checkRunnerAchievements();            
+            
             // 🚀 VELOCIDAD INFINITA - ¡HASTA LA VELOCIDAD DE LA LUZ!
             gameState.speed += 0.008; // Aceleración constante SIN LÍMITE
             
@@ -1648,8 +1485,7 @@
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 15px; justify-content: center; margin-bottom: 20px;">
                             <button onclick="shareNative()" style="background: linear-gradient(45deg, #FF0080, #00FFFF); color: white; border: none; padding: 15px 25px; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: bold; box-shadow: 0 0 20px rgba(255,0,128,0.5);">📱 COMPARTIR (Elige tu app)</button>
-                            <button onclick="showRunnerPowerUpMenu()" style="background: linear-gradient(45deg, #00FF00, #00CC00); color: white; border: none; padding: 15px 25px; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: bold; box-shadow: 0 0 20px rgba(0,255,0,0.5);">⚡ POWER-UPS</button>
-                            <button onclick="showRunnerAchievements()" style="background: linear-gradient(45deg, #FFD700, #FFA500); color: white; border: none; padding: 15px 25px; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: bold; box-shadow: 0 0 20px rgba(255,215,0,0.5);">🏆 LOGROS</button>                            <button onclick="copyViralMessage()" style="background: linear-gradient(45deg, #00FFFF, #FFFF00); color: #000; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: bold;">📋 COPIAR MENSAJE VIRAL</button>
+                            <button onclick="copyViralMessage()" style="background: linear-gradient(45deg, #00FFFF, #FFFF00); color: #000; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: bold;">📋 COPIAR MENSAJE VIRAL</button>
                             <button onclick="generateShareImage()" style="background: linear-gradient(45deg, #FF0080, #FF8C00); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: bold;">📸 GENERAR IMAGEN</button>
                         </div>
                         <div style="display: flex; gap: 10px; justify-content: center;">
@@ -1677,12 +1513,7 @@
         }
         
         // 🚀 NUEVA SHARING FUNCTIONS - ULTRA EFECTIVAS
-        // Capturar momento épico antes de compartir
-        captureEpicMoment();
-        return;
-    }
-
-    function shareNativeOriginal() {        function shareNative() {
+        function shareNative() {
             const distance = Math.floor(gameState.distance);
             const coins = gameState.coins;
             const speed = Math.floor(gameState.speed);
@@ -2407,153 +2238,6 @@ https://neon-runner-lipastudios.netlify.app
             
             console.log('🎮 Neon Runner continued with reward!');
         }
-
-    // ========================================
-    // FUNCIONES DE POWER-UPS Y LOGROS PARA NEON RUNNER
-    // ========================================
-
-    function showRunnerPowerUpMenu() {
-        const modal = document.createElement("div");
-        modal.className = "runner-powerup-modal";
-        modal.innerHTML = `
-            <div class="runner-powerup-content">
-                <h3>⚡ Power-ups Disponibles</h3>
-                <div class="runner-powerup-grid">
-                    <div class="runner-powerup-item">
-                        <h4>🛡️ Escudo</h4>
-                        <p>Protección contra 1 choque</p>
-                        <div class="runner-powerup-actions">
-                            <span class="cost">💰 200</span>
-                            <button onclick="buyRunnerPowerUp("shield")" class="btn">Comprar</button>
-                            <button onclick="showSocialRewardAd("shield", () => activateRunnerPowerUp("shield"))" class="btn reward">🎬 Gratis</button>
-                        </div>
-                    </div>
-                    <div class="runner-powerup-item">
-                        <h4>🧲 Imán</h4>
-                        <p>Atrae monedas automáticamente</p>
-                        <div class="runner-powerup-actions">
-                            <span class="cost">💰 150</span>
-                            <button onclick="buyRunnerPowerUp("magnet")" class="btn">Comprar</button>
-                            <button onclick="showSocialRewardAd("magnet", () => activateRunnerPowerUp("magnet"))" class="btn reward">🎬 Gratis</button>
-                        </div>
-                    </div>
-                    <div class="runner-powerup-item">
-                        <h4>💎 Monedas Dobles</h4>
-                        <p>Duplica las monedas recogidas</p>
-                        <div class="runner-powerup-actions">
-                            <span class="cost">💰 300</span>
-                            <button onclick="buyRunnerPowerUp("doubleCoins")" class="btn">Comprar</button>
-                            <button onclick="showSocialRewardAd("doubleCoins", () => activateRunnerPowerUp("doubleCoins"))" class="btn reward">🎬 Gratis</button>
-                        </div>
-                    </div>
-                    <div class="runner-powerup-item">
-                        <h4>🐌 Cámara Lenta</h4>
-                        <p>Ralentiza el tiempo</p>
-                        <div class="runner-powerup-actions">
-                            <span class="cost">💰 250</span>
-                            <button onclick="buyRunnerPowerUp("slowMotion")" class="btn">Comprar</button>
-                            <button onclick="showSocialRewardAd("slowMotion", () => activateRunnerPowerUp("slowMotion"))" class="btn reward">🎬 Gratis</button>
-                        </div>
-                    </div>
-                    <div class="runner-powerup-item">
-                        <h4>❤️ Vida Extra</h4>
-                        <p>Te da una segunda oportunidad</p>
-                        <div class="runner-powerup-actions">
-                            <span class="cost">💰 500</span>
-                            <button onclick="buyRunnerPowerUp("extraLife")" class="btn">Comprar</button>
-                            <button onclick="showSocialRewardAd("extraLife", () => activateRunnerPowerUp("extraLife"))" class="btn reward">🎬 Gratis</button>
-                        </div>
-                    </div>
-                </div>
-                <button onclick="closeRunnerPowerUpMenu()" class="close-btn">✕</button>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        setTimeout(() => modal.classList.add("show"), 100);
-    }
-
-    function showRunnerAchievements() {
-        const modal = document.createElement("div");
-        modal.className = "runner-achievements-modal";
-        modal.innerHTML = `
-            <div class="runner-achievements-content">
-                <h3>🏆 Logros</h3>
-                <div class="runner-achievements-list">
-                    ${Object.entries(runnerAchievements).map(([key, achievement]) => `
-                        <div class="runner-achievement-item ${achievement.unlocked ? "unlocked" : "locked"}">
-                            <div class="runner-achievement-icon">${achievement.unlocked ? "🏆" : "🔒"}</div>
-                            <div class="runner-achievement-info">
-                                <h4>${achievement.name}</h4>
-                                <p>${achievement.description}</p>
-                                <span class="reward">Recompensa: ${achievement.reward} monedas</span>
-                            </div>
-                        </div>
-                    `).join("")}
-                </div>
-                <button onclick="closeRunnerAchievements()" class="close-btn">✕</button>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        setTimeout(() => modal.classList.add("show"), 100);
-    }
-
-    function buyRunnerPowerUp(powerUpType) {
-        const powerUp = runnerPowerUps[powerUpType];
-        if (runnerCoins >= powerUp.cost) {
-            runnerCoins -= powerUp.cost;
-            localStorage.setItem("neonRunnerCoins", runnerCoins.toString());
-            updateRunnerCoinsDisplay();
-            activateRunnerPowerUp(powerUpType);
-            showNotification(`¡${powerUp.name} comprado!`, "success");
-        } else {
-            showNotification("No tienes suficientes monedas", "error");
-        }
-    }
-
-    function activateRunnerPowerUp(powerUpType) {
-        const powerUp = runnerPowerUps[powerUpType];
-        showNotification(`${powerUp.name} activado!`, "success");
-        
-        // Implementar efectos del power-up
-        switch(powerUpType) {
-            case "shield":
-                // Activar escudo
-                break;
-            case "magnet":
-                // Activar imán
-                break;
-            case "doubleCoins":
-                // Duplicar monedas
-                break;
-            case "slowMotion":
-                // Ralentizar el juego
-                break;
-            case "extraLife":
-                // Dar vida extra
-                break;
-        }
-    }
-
-    function closeRunnerPowerUpMenu() {
-        const modal = document.querySelector(".runner-powerup-modal");
-        if (modal) {
-            modal.classList.remove("show");
-            setTimeout(() => modal.remove(), 300);
-        }
-    }
-
-    function closeRunnerAchievements() {
-        const modal = document.querySelector(".runner-achievements-modal");
-        if (modal) {
-            modal.classList.remove("show");
-            setTimeout(() => modal.remove(), 300);
-        }
-    }
-
-    // Inicializar monedas al cargar
-    document.addEventListener("DOMContentLoaded", function() {
-        updateRunnerCoinsDisplay();
-    });
     </script>
 </body>
 </html>
