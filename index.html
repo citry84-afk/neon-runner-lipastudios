@@ -577,7 +577,7 @@
         <div id="game-screen" class="screen hidden">
         
         <!-- TOP BANNER AD - MOBILE-FIRST -->
-        <div style="background: rgba(0,0,0,0.85); padding: 5px; text-align: center; position: fixed; top: 0; width: 100%; z-index: 1000; height: 60px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #333;">
+        <div id="top-banner" style="background: rgba(0,0,0,0.85); padding: 5px; text-align: center; position: fixed; top: 0; width: 100%; z-index: 1000; height: 60px; display: none; align-items: center; justify-content: center; border-bottom: 1px solid #333;">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-4129506161314540"
@@ -620,7 +620,7 @@
         <button class="btn" onclick="showMenu()" style="position: fixed; top: 20px; right: 20px; z-index: 1001; padding: 10px 15px; font-size: 0.8rem;">🏠 MENÚ</button>
         
         <!-- BOTTOM BANNER AD - MOBILE-FIRST -->
-        <div style="background: rgba(0,0,0,0.85); padding: 5px; text-align: center; position: fixed; bottom: 0; width: 100%; z-index: 1000; height: 60px; display: flex; align-items: center; justify-content: center; border-top: 1px solid #333;">
+        <div id="bottom-banner" style="background: rgba(0,0,0,0.85); padding: 5px; text-align: center; position: fixed; bottom: 0; width: 100%; z-index: 1000; height: 60px; display: none; align-items: center; justify-content: center; border-top: 1px solid #333;">
         <ins class="adsbygoogle"
              style="display:block"
              data-ad-client="ca-pub-4129506161314540"
@@ -908,7 +908,7 @@
                 const spacing = 400 + Math.random() * 200; // Entre 400px y 600px - MUY SEGURO
                 
                 if (!lastObstacle || lastObstacle.x < spacing) {
-                    spawnObstacle();
+                spawnObstacle();
                 }
             }
             
@@ -1499,6 +1499,15 @@
             `;
             
             document.body.insertAdjacentHTML('beforeend', modal);
+            // Mostrar banners en game over
+            try {
+                const top = document.getElementById('top-banner');
+                const bottom = document.getElementById('bottom-banner');
+                if (top) top.style.display = 'flex';
+                if (bottom) bottom.style.display = 'flex';
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {}
             
             // Track game over event
             window.trackEvent('game_over_with_score', {
@@ -1512,6 +1521,11 @@
         function closeShareModal() {
             const modal = document.getElementById('shareModal');
             if (modal) modal.remove();
+            // Ocultar banners cuando se cierra modal (si vuelve a jugar o al menú)
+            const top = document.getElementById('top-banner');
+            const bottom = document.getElementById('bottom-banner');
+            if (top) top.style.display = 'none';
+            if (bottom) bottom.style.display = 'none';
         }
         
         // 🚀 NUEVA SHARING FUNCTIONS - ULTRA EFECTIVAS
