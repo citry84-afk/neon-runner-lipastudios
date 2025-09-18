@@ -798,6 +798,9 @@
         function startGame() {
             updateDebug('Starting VERTICAL game...');
             
+            // Track game start
+            gtag('event', 'game_start', { game_name: 'neon_runner' });
+            
             gameState.distance = 0;
             gameState.coins = 0;
             gameState.speed = 4.0; // Vertical speed
@@ -1429,15 +1432,16 @@
             gameState.gameActive = false;
             stopBackgroundMusic();
             
-            // 💰 INTERSTITIAL AD ON GAME OVER
-            if (Math.random() < 0.4) { // 40% chance
-                adBreak({
-                    type: 'interstitial',
-                    name: 'game-over-ad',
-                    beforeAd: () => console.log('Game Over Ad starting...'),
-                    afterAd: () => console.log('Game Over Ad finished')
-                });
-            }
+            // Track game over
+            gtag('event', 'game_over', { 
+                game_name: 'neon_runner', 
+                score: Math.floor(gameState.distance),
+                coins: gameState.coins,
+                speed: Math.floor(gameState.speed)
+            });
+            
+            // Show interstitial ad
+            showInterstitialAd();
             
             // 8-bit game over sound
             playSound(330, 200, 'sawtooth', 0.2);
@@ -1491,8 +1495,17 @@
                             <button onclick="generateShareImage()" style="background: linear-gradient(45deg, #FF0080, #FF8C00); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: bold;">📸 GENERAR IMAGEN</button>
                         </div>
                         <div style="display: flex; gap: 10px; justify-content: center;">
-                            <button onclick="closeShareModal(); startGame();" style="background: #FF0080; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">🔄 JUGAR DE NUEVO</button>
+                            <button onclick="restartGame()" style="background: #FF0080; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">🔄 JUGAR DE NUEVO</button>
                             <button onclick="closeShareModal(); showMenu();" style="background: #333; color: white; border: 2px solid #00FFFF; padding: 10px 20px; border-radius: 8px; cursor: pointer;">🏠 MENÚ</button>
+                        </div>
+                        
+                        <!-- Interstitial Ad Container -->
+                        <div id="gameOverAd" style="margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.8); border: 1px solid #00FFFF; border-radius: 8px;">
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-4129506161314540"
+                                 data-ad-slot="6673201053"
+                                 data-ad-format="auto"></ins>
                         </div>
                     </div>
                 </div>
@@ -2127,10 +2140,29 @@ https://neon-runner-lipastudios.netlify.app
             });
         }
         
+        // Add missing functions
+        function showInterstitialAd() {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                gtag('event', 'ad_impression', { game_name: 'neon_runner' });
+            } catch (e) {
+                console.log('AdSense not loaded yet');
+            }
+        }
+        
+        function restartGame() {
+            gtag('event', 'game_restart', { game_name: 'neon_runner' });
+            closeShareModal();
+            startGame();
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             updateDebug('DOM loaded');
             showMenu();
+            
+            // Track page view
+            gtag('event', 'page_view', { game_name: 'neon_runner' });
             
             // 💰 ACTIVATE ADSENSE
             setTimeout(() => {
