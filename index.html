@@ -1541,8 +1541,6 @@
                 const bottom = document.getElementById('bottom-banner');
                 if (top) top.style.display = 'flex';
                 if (bottom) bottom.style.display = 'flex';
-                (adsbygoogle = window.adsbygoogle || []).push({});
-                (adsbygoogle = window.adsbygoogle || []).push({});
             } catch (e) {}
             
             // Track game over event
@@ -2166,7 +2164,6 @@ https://neon-runner-lipastudios.netlify.app
         // Add missing functions
         function showInterstitialAd() {
             try {
-                (adsbygoogle = window.adsbygoogle || []).push({});
                 gtag('event', 'ad_impression', { game_name: 'neon_runner' });
             } catch (e) {
                 console.log('AdSense not loaded yet');
@@ -2190,10 +2187,6 @@ https://neon-runner-lipastudios.netlify.app
             if (side) side.style.display = 'block';
             if (menu) menu.style.display = 'block';
             try {
-                (adsbygoogle = window.adsbygoogle || []).push({});
-                (adsbygoogle = window.adsbygoogle || []).push({});
-                (adsbygoogle = window.adsbygoogle || []).push({});
-                (adsbygoogle = window.adsbygoogle || []).push({});
             } catch(e) {}
         }
         
@@ -2239,15 +2232,7 @@ https://neon-runner-lipastudios.netlify.app
             // Track page view
             gtag('event', 'page_view', { game_name: 'neon_runner' });
             
-            // 💰 ACTIVATE ADSENSE
-            setTimeout(() => {
-                try {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                } catch (e) {
-                    console.log('AdSense not loaded yet');
-                }
-            }, 1000);
+            // 💰 ADSENSE READY
         });
         
         // Fallback initialization
