@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com; img-src 'self' data: https://www.google-analytics.com https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com;">
     <title>🚀 Neon Runner - Ultra Addictive Production | LIPA Studios</title>
     <meta name="description" content="Play Neon Runner, the addictive endless cyberpunk runner! Dodge obstacles, collect coins, beat high scores. Free HTML5 game by LIPA Studios.">
     
@@ -549,7 +550,6 @@
         
     </style>
     <!-- FIXES QUE FUNCIONAN NEON RUNNER v2.2 -->
-    <script src="neon-runner-working-fixes.js"></script>
 </head>
 <body>
     <div class="debug" id="debug">
@@ -2321,7 +2321,11 @@ https://neon-runner-lipastudios.netlify.app
             gameState.speed = Math.max(4.0, gameState.speed - 1.0); // Reduce speed slightly
             
             // Reset some obstacles
-            gameState.obstacles = gameState.obstacles.filter(obstacle => obstacle.x > gameState.runner.x + 300);
+            if (gameState.runner && gameState.runner.x !== undefined) {
+                gameState.obstacles = gameState.obstacles.filter(obstacle => obstacle.x > gameState.runner.x + 300);
+            } else {
+                gameState.obstacles = [];
+            }
             
             // Restart game
             gameState.gameActive = true;
