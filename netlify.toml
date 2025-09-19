@@ -83,7 +83,7 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' *.google.com *.googlesyndication.com *.googletagmanager.com *.gstatic.com data: blob:; img-src 'self' 'unsafe-inline' data: blob: *.google.com *.googlesyndication.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.google.com *.googlesyndication.com *.googletagmanager.com *.gstatic.com; style-src 'self' 'unsafe-inline' *.googleapis.com; font-src 'self' *.googleapis.com *.gstatic.com data:; connect-src 'self' *.google.com *.googlesyndication.com *.googletagmanager.com;"
+    Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' *.google.com *.googlesyndication.com *.googletagmanager.com *.gstatic.com data: blob:; img-src 'self' 'unsafe-inline' data: blob: *.google.com *.googlesyndication.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.google.com *.googlesyndication.com *.googletagmanager.com *.gstatic.com; style-src 'self' 'unsafe-inline' *.googleapis.com; font-src 'self' *.googleapis.com *.gstatic.com data:; connect-src 'self' *.google.com *.googlesyndication.com *.googletagmanager.com *.google-analytics.com region1.google-analytics.com ep1.adtrafficquality.google;"
 
 # Environment specific settings
 [context.production.environment]
