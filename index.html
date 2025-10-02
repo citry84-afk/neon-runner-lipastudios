@@ -20,11 +20,23 @@
                 ...parameters
             });
         };
+        
+        window.trackDonationClick = function(amount = 'custom') {
+            gtag('event', 'donation_click', {
+                source: 'neon_runner',
+                amount: amount,
+                value: parseFloat(amount) || 1
+            });
+        };
     </script>
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4837743291717475"
-            crossorigin="anonymous"></script>
+         crossorigin="anonymous"></script>
+    <!-- Consent Mode v2 + Banner -->
+    <script defer src="/consent.js"></script>
+    <!-- Leaderboard System -->
+    <script src="/leaderboard-global.js"></script>
     
     <!-- H5 Games Ads API -->
     <script>
@@ -106,6 +118,20 @@
             background: rgba(255, 0, 128, 0.1);
             box-shadow: 0 0 25px rgba(255, 0, 128, 0.5);
             transform: translateY(-3px);
+        }
+        
+        .btn.donate-btn {
+            border-color: #ff6600;
+            color: #ff6600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn.donate-btn:hover {
+            background: rgba(255, 102, 0, 0.1);
+            box-shadow: 0 0 25px rgba(255, 102, 0, 0.5);
         }
         
         .game-area {
@@ -571,12 +597,20 @@
         <button class="btn" onclick="startGame()">🏃 EMPEZAR JUEGO</button>
         <button class="btn" onclick="testVisuals()">🎨 TEST VISUAL</button>
         <button class="btn" onclick="testAudio()">🔊 TEST AUDIO</button>
+        <div class="donation-section">
+            <h3 style="color: #FFFF00; margin-bottom: 15px;">💖 ¡Apoya el desarrollo!</h3>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <a href="https://paypal.me/lipastudios/0.50" target="_blank" onclick="trackDonationClick('0.50')" style="padding: 12px 20px; background: linear-gradient(45deg, #4CAF50, #8BC34A); color: white; font-weight: bold; border-radius: 8px; text-decoration: none; font-size: 14px;">☕ 0,50€</a>
+                <a href="https://paypal.me/lipastudios/2.00" target="_blank" onclick="trackDonationClick('2.00')" style="padding: 12px 20px; background: linear-gradient(45deg, #FF9800, #FFC107); color: white; font-weight: bold; border-radius: 8px; text-decoration: none; font-size: 14px;">🍕 2€</a>
+                <a href="https://paypal.me/lipastudios/5.00" target="_blank" onclick="trackDonationClick('5.00')" style="padding: 12px 20px; background: linear-gradient(45deg, #E91E63, #F06292); color: white; font-weight: bold; border-radius: 8px; text-decoration: none; font-size: 14px;">🎮 5€</a>
+            </div>
+        </div>
         
         <div class="ui">
             <div class="ui-item">
                 <div class="ui-label">MEJOR DISTANCIA</div>
                 <div class="ui-value" id="best-distance">0m</div>
-                    </div>
+            </div>
             </div>
         </div>
         
@@ -1450,9 +1484,16 @@
             updateDebug(`Flight energy restored: +${Math.floor(restored)}%`);
         }
         
+        // CONTADOR DE PARTIDAS PARA ESTRATEGIA INTELIGENTE
+        let gamesPlayed = 0;
+        let lastInterstitialTime = 0;
+        
         function gameOver() {
             gameState.gameActive = false;
             stopBackgroundMusic();
+            
+            gamesPlayed++;
+            const currentTime = Date.now();
             
             // Track game over
             gtag('event', 'game_over', { 
@@ -1462,8 +1503,27 @@
                 speed: Math.floor(gameState.speed)
             });
             
-            // Show interstitial ad
-            showInterstitialAd();
+            // 🏆 INTEGRACIÓN DEL LEADERBOARD GLOBAL
+            setTimeout(() => {
+                if (window.GlobalLeaderboard) {
+                    if (!window.neonRunnerLeaderboard) {
+                        window.neonRunnerLeaderboard = new GlobalLeaderboard('neon-runner');
+                    }
+                    // Enviar puntuación al leaderboard global
+                    window.neonRunnerLeaderboard.submitScore(Math.floor(gameState.distance), Math.floor(gameState.speed), gameState.coins);
+                }
+            }, 1000);
+            
+            // ESTRATEGIA INTELIGENTE DE MONETIZACIÓN
+            // 1. Siempre mostrar banners en game over (no invasivo)
+            // 2. Interstitial solo cada 3 partidas perdidas Y cada 5 minutos mínimo
+            const timeSinceLastInterstitial = currentTime - lastInterstitialTime;
+            const shouldShowInterstitial = (gamesPlayed % 3 === 0) && (timeSinceLastInterstitial > 300000); // 5 minutos
+            
+            if (shouldShowInterstitial) {
+                showInterstitialAd();
+                lastInterstitialTime = currentTime;
+            }
             
             // 8-bit game over sound
             playSound(330, 200, 'sawtooth', 0.2);
@@ -1516,7 +1576,16 @@
                             <button onclick="copyViralMessage()" style="background: linear-gradient(45deg, #00FFFF, #FFFF00); color: #000; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: bold;">📋 COPIAR MENSAJE VIRAL</button>
                             <button onclick="generateShareImage()" style="background: linear-gradient(45deg, #FF0080, #FF8C00); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: bold;">📸 GENERAR IMAGEN</button>
                         </div>
-                        <div style="display: flex; gap: 10px; justify-content: center;">
+                        <div style="margin: 20px 0;">
+                            <h3 style="color: #FFFF00; margin-bottom: 15px;">💖 ¡Apoya el desarrollo!</h3>
+                            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                                <a href="https://paypal.me/lipastudios/0.50" target="_blank" onclick="trackDonationClick('0.50')" style="padding: 12px 20px; background: linear-gradient(45deg, #4CAF50, #8BC34A); color: white; font-weight: bold; border-radius: 8px; text-decoration: none; font-size: 14px;">☕ 0,50€</a>
+                                <a href="https://paypal.me/lipastudios/2.00" target="_blank" onclick="trackDonationClick('2.00')" style="padding: 12px 20px; background: linear-gradient(45deg, #FF9800, #FFC107); color: white; font-weight: bold; border-radius: 8px; text-decoration: none; font-size: 14px;">🍕 2€</a>
+                                <a href="https://paypal.me/lipastudios/5.00" target="_blank" onclick="trackDonationClick('5.00')" style="padding: 12px 20px; background: linear-gradient(45deg, #E91E63, #F06292); color: white; font-weight: bold; border-radius: 8px; text-decoration: none; font-size: 14px;">🎮 5€</a>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                            <button onclick="showGlobalLeaderboard()" style="background: linear-gradient(45deg, #00FFFF, #FF0080); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">🏆 RANKING GLOBAL</button>
                             <button onclick="restartGame()" style="background: #FF0080; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">🔄 JUGAR DE NUEVO</button>
                             <button onclick="closeShareModal(); showMenu();" style="background: #333; color: white; border: 2px solid #00FFFF; padding: 10px 20px; border-radius: 8px; cursor: pointer;">🏠 MENÚ</button>
                         </div>
@@ -2174,6 +2243,21 @@ https://neon-runner-lipastudios.netlify.app
             closeShareModal();
             startGame();
         }
+        
+        // 🏆 FUNCIÓN PARA MOSTRAR RANKING GLOBAL
+        function showGlobalLeaderboard() {
+            if (!window.neonRunnerLeaderboard) {
+                window.neonRunnerLeaderboard = new GlobalLeaderboard('neon-runner');
+            }
+            
+            // Si no hay usuario, pedir nombre primero
+            if (!window.neonRunnerLeaderboard.currentUser) {
+                window.neonRunnerLeaderboard.showNamePrompt(false);
+            } else {
+                // Mostrar ranking
+                window.neonRunnerLeaderboard.showLeaderboard();
+            }
+        }
 
         // Ads helpers - ESTRATEGIA AGRESIVA PERO INTELIGENTE
         function showAds() {
@@ -2205,22 +2289,15 @@ https://neon-runner-lipastudios.netlify.app
         let bannerShown = false;
         
         function checkBannerDisplay() {
-            if (!gameState.playing || bannerShown) return;
-            
-            const gameTime = Date.now() - gameStartTime;
-            if (gameTime > 30000) { // 30 segundos
-                showAds();
-                bannerShown = true;
-                console.log('💰 Banners mostrados después de 30s de juego');
-            }
+            // ESTRATEGIA INTELIGENTE - NO MOSTRAR BANNERS DURANTE EL JUEGO
+            // Los banners solo se muestran en menú y game over
+            return;
         }
         
-        // Mostrar banners en pausa (oportunidad de monetización)
+        // ESTRATEGIA INTELIGENTE - NO MOSTRAR BANNERS EN PAUSA
         function showPauseAds() {
-            if (gameState.paused) {
-                showAds();
-                console.log('💰 Banners mostrados durante pausa');
-            }
+            // Los banners solo se muestran en menú y game over
+            return;
         }
 
         // Initialize
