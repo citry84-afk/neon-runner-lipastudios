@@ -335,7 +335,11 @@ class UnifiedGlobalLeaderboard {
             'neon-runner-wow': '🏃‍♂️',
             'stack-tower-neon': '📚',
             'neon-beat-stage': '🎵',
-            'neon-lab-physics-wow': '🧪'
+            'neon-lab-physics-wow': '🧪',
+            'stack-tower-wow': '📚',
+            'neon-beat-wow': '🎵',
+            'neon-runner': '🏃‍♂️',
+            'neon-lab-physics': '🧪'
         };
         return icons[gameName] || '🎮';
     }
